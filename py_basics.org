@@ -382,10 +382,16 @@ x[::-1]
 *** Module
      1. A module is a file containing Python definitions and statements.
      2. The file name is the module name with the suffix .py appended.
+*** 模块
+     1. 模块是一个包含一些Python定义和语句的文件
+     2. 文件名就是模块名后面添加后缀 .py
 *** Package
      1. Packages are a way of structuring Python’s module namespace by using
         “dotted module names”.
      2. For example, the module name A.B designates a submodule named B in a package named A. 
+*** 包
+     1. 包是一种通过用“.模块名”来构造 Python 模块命名空间的方式。
+     2. 例如，模块名A.B表示A包中名称为B的子模块。 
 *** library
      - Python has a large standard library, commonly cited as one of Python's
         greatest strengths,providing tools suited to many tasks.
@@ -397,9 +403,29 @@ x[::-1]
         pseudorandom number generators, arithmetic with arbitrary precision
         decimals, manipulating regular expressions, and doing unit testing
         are also included.
+*** 库
+     - Python有一个大型的标准库，被认为是Python的最大优势之一，提供了适合许多任
+       务的工具
+     - 复杂且功能强大，被描述为“自带电池”的Python哲学
+     - 对于面向互联网的应用程序，支持许多标准格式和协议（例如MIME和HTTP）。
+     - 包含用于创建图形用户界面，连接到关系数据库，伪随机数生成器，精确到任意小数的算术，
+       操作正则表达式以及进行单元测试的模块。        
 *** Module import
      1. =import module1, module2=
 	- Using the module name we can access the function using dot (.) operation.
+
+#+BEGIN_SRC python :eval yes
+import math
+math.sin(3)
+""""""
+#+END_SRC
+
+     1. [@2] =import modname as mm= 
+     2. =from modname import name1, name2=
+     3. =from modname import *=
+*** 模块导入
+     1. =import module1, module2=
+	- 通过模块名加点(.)访问函数
 
 #+BEGIN_SRC python :eval yes
 import math
@@ -417,10 +443,19 @@ math.sin(3)
 	1. graphical user interfaces, web frameworks, multimedia, databases, networking and communications
 	2. test frameworks, automation and web scraping, documentation tools, system administration
 	3. scientific computing, text processing, image processing
+*** PyPI - Python包索引
+     - 截至2016年11月，Python软件包索引（包含用于Python的第三方软件的官方存储库）
+       包含92,000多个软件包，可提供广泛的功能，其中包括：
+	1. 图形用户界面、网络框架、多媒体、数据库、网络和通信
+	2. 测试框架、自动化和web抓取、文档工具、系统管理
+	3. 科学计算，文本处理，图像处理
 *** The dir() Function
      1. The built-in function dir() is used to find out which names a module
         defines.
      2. Without arguments, dir() lists the names you have defined currently:
+*** dir()函数
+     1. 内置函数 dir() 用于查找模块定义的名称。
+     2. 不带参数的dir（）列出当前定义的名称:     
 *** 查看modules
      - 查看内置函数(builtin 模块中的函数)： ~dir(__builtin__)~
      - 查看内置模块(written in C and built in to the Python interpreter)： ~sys.builtin_module_names~
@@ -453,6 +488,14 @@ for importer, modname, ispkg in pkgutil.iter_modules(numpy.__path__, prefix="num
 	2. tuple
 	3. dict
 	4. set
+*** 简介
+     1. 使用函数组织代码，使用内置类型组织数据
+     2. “面向对象编程”：使用程序员定义的类型来组织代码和数据。
+     3. Python内置类型:
+	1. list
+	2. tuple
+	3. dict
+	4. set 
 *** programmer-defined type: class
      1. A programmer-defined type is also called a *class*. A class definition looks like this:
 
@@ -468,6 +511,21 @@ Point()
     1. [@2] The header indicates that the new class is called Point .
     2. The body is a docstring that explains what the class is for.
     3. You can define variables and methods inside a class definition.
+*** 程序员定义的类型: class
+     1. 程序员定义的类型也称为 *class*. 类的定义类似如下:
+
+#+BEGIN_SRC python
+class Point:
+    """Represents a point in 2-D space."""
+Point()
+""""""
+#+END_SRC
+
+
+
+    1. [@2] 开头表示创建一个新类 Point
+    2. 主体是一个字符串，用于解释该新类的作用
+    3. 你可以在类定义中定义变量和方法    
 *** object
      1. Defining a class named ~Point~ creates a class object:
 
@@ -484,12 +542,34 @@ Point()
 >>> blank
 <__main__.Point object at 0xb7e9d3ac>
 #+END_SRC
+*** 对象
+     1. 定义一个名为~Point~的类会创建一个类对象:
+
+#+BEGIN_SRC python :eval no
+>>> Point
+<class '__main__.Point'>
+#+END_SRC
+
+     3. [@2] 类对象就像一个创建对象的工厂。
+     4. 要创建Point，可以将Point当作函数来调用
+
+#+BEGIN_SRC python :eval no
+>>> blank = Point()
+>>> blank
+<__main__.Point object at 0xb7e9d3ac>
+#+END_SRC
 *** instance
      1. The return value is a reference to a Point object, which we assign to blank.
      2. Creating a new object is called *instantiation*, and the object is an *instance* of the class.
      3. When you print an instance, Python tells you what class it belongs to and where it is stored in memory
      4. (the prefix 0x means that the following number is in hexadecimal).
      5. Every object is an instance of some class, so “object” and “instance” are interchangeable.
+*** 实例
+     1. 返回值是对Point对象的引用，我们将其指定为空。
+     2. 创建一个新对象称为 *实例化*, 这个对象是类的 *实例* 
+     3. 当你输出一个实例时，Python会告诉你它属于哪个类以及存储的位置
+     4. (前缀0x表示以下数字为十六进制)
+     5. 每个对象都是某个类的实例，因此“对象”和“实例”是可以互换的。     
 *** Attributes
      1. You can assign values to an instance using dot notation:
 
@@ -507,6 +587,23 @@ Point()
 >>> x
 3.0
 #+END_SRC
+*** 属性
+     1. 实例后加点(.)对变量进行赋值
+
+#+BEGIN_SRC python :eval no
+>>> blank.x = 3.0
+>>> blank.y = 4.0
+#+END_SRC
+
+     2. [@2] 这些元素称为属性。
+     3. 使用相同的语法读取属性值：
+#+BEGIN_SRC python :eval no
+>>> blank.y
+4.0
+>>> x = blank.x
+>>> x
+3.0
+#+END_SRC
 *** Functions
      1. Pure Function
 	- a pure function does not modify any of the objects passed to it as
@@ -514,6 +611,12 @@ Point()
           user input, other than returning a value.
      2. Modifiers
 	- a function to modify the objects it gets as parameters.
+*** 函数
+     1. 纯函数
+	- 纯函数的返回结果只依赖于它自己的参数，函数执行过程里面没有副作用，输入相同的参数，
+       返回同样的结果
+     2. 修饰符
+	- 修改作为参数获取的对象的函数。     
 *** Methods
      - a *method* is a function that is associated with a particular class.
 
@@ -528,6 +631,20 @@ a+1
      - a method is called right after it is bound:
 
 =x.f()=
+*** 方法
+     - *方法*是与特定类关联的函数。
+
+#+BEGIN_SRC python :eval yes
+a=[1,2,3]
+import numpy as np
+a=np.array(a)
+a+1
+""""""
+#+END_SRC
+
+     - 方法在绑定后立即被调用：
+
+=x.f()=
 *** Methods and Functions 
      - Methods are semantically the same as functions, but there are two syntactic differences:
        1. Methods are defined inside a class definition in order to make the
@@ -535,12 +652,26 @@ a+1
        2. The syntax for invoking a method is different from the syntax for calling a function.
      - Methods and functions can be changed from one form to another, you can
        choose the best form for whatever you are doing.
+*** 方法和函数 
+     - 方法在语义上与函数相同，但是在语法上有两个区别：
+       1. 在类定义内定义方法，以使类与方法之间的关系明确。
+       2. 调用方法的语法与调用函数的语法不同。
+     - 方法和函数的形式可以相互更改，可以根据自己的工作选择最佳形式。       
 *** Magic Methods
      1. They are special methods with fixed names. They are the methods with this clumsy syntax, i.e. the double underscores at the beginning and the end.
      2. don't have to invoke magic methods directly. The invocation is realized behind the scenes. 
      3. By convention, the first parameter of a method is called *self* and the second parameter *other*.
      4. The *init* method (short for “initialization”) is a special method that gets invoked when an object is instantiated.
      5. The *str* is a special method, like init, that is supposed to return a string representation of an object(with =print= function).
+*** 魔术方法
+     1. 它们是具有固定名称的特殊方法。 它们具有笨拙语法，以"_"(双下划线)作为名
+        字的开头和结尾
+     2. 不用直接调用魔术方法。 调用是在后台实现的。
+     3. 按照惯例，方法的第一个参数称为 *self*，第二个参数称为 *other*。
+     4. *init* 方法（“initialization”的缩写）是一种特殊的方法，在实例化
+        对象时会调用该方法。
+     5. *str* 是一种特殊的方法，如init一样，应该返回对象的字符串表示形式
+       （带有 =print = 函数）。     
 * Brief Tour of the Standard Library
 *** Operating System Interface
      1. The os module provides dozens of functions for interacting with the
@@ -548,30 +679,64 @@ a+1
      2. For daily file and directory management tasks, the shutil module
         provides a higher level interface that is easier to use
      3. use dir() and help() 函数
+*** 操作系统接口
+     1. os模块提供了许多与操作系统交互的函数。
+     2. 对于日常的文件和目录管理任务，shuil模块提供了更高级别的接口，更易于使用
+     3. 使用 dir() and help() 函数
 *** String Pattern Matching
      1. The re module provides regular expression tools for advanced string processing. For complex matching and manipulation, regular expressions offer succinct, optimized solutions:
      2. When only simple capabilities are needed, string methods are preferred because they are easier to read and debug
+*** 字符串模式匹配
+     1. re模块为高级字符串处理提供正则表达式工具。对于复杂的匹配和操作，正则表达
+        式提供简洁、优化的解决方案：
+     2. 当仅需要简单功能时，首选字符串方法，因为它们更易于阅读和调试
 *** Mathematics
      1. The math module gives access to the underlying C library functions for floating point math:
      2. The random module provides tools for making random selections:
      3. The decimal module offers a Decimal datatype for decimal floating point arithmetic.
+*** 数学运算
+     1. math模块可访问用于浮点数学运算的基础C库函数：
+     2. 随机模块提供了用于进行随机选择的工具：
+     3. 十进制模块为十进制浮点运算提供了十进制数据类型。
 *** Tools for Working with Lists
      1. The array module provides an array() object that is like a list that stores only homogeneous data and stores it more compactly.
      2. The collections module provides a deque() object that is like a list with faster appends and pops from the left side but slower lookups in the middle. These objects are well suited for implementing queues and breadth first tree searches:
+*** 用于列表的工具
+     1. 数组模块提供了一个array()对象，该对象类似列表，仅存储同类数据且更加简洁
+     2. 集合模块提供了一个deque()对象，该对象类似列表，能更快地从左侧添加和抛出，但在
+        中间的查找较慢。 这些对象非常适合实现队列和广度优先树搜索：
 *** CSV File Reading and Writing
      1. The csv module implements classes to read and write tabular data in CSV format.
      2. It allows programmers to say, “write this data in the format preferred by Excel,” or “read data from this file which was generated by Excel,” without knowing the precise details of the CSV format used by Excel. Programmers can also describe the CSV formats understood by other applications or define their own special-purpose CSV formats.
      3. The csv module’s reader and writer objects read and write sequences.
+*** CSV 文件读取和写入
+     1. csv模块实现类读取和写入CSV格式的表格数据。
+     2. 它使程序员可以说“Excel优选这种格式写入数据”，或“从Excel等文件读取数据”，
+        而无需知道Excel使用的CSV格式的确切细节。程序员也可以以其他应用程序理解来
+        描述CSV格式，或者定义自己专用的CSV格式。
+     3. csv模块的读取器和写入器对象可以读取和写入序列。
 *** Structured Markup Processing and Web Tools
      1. HTMLParser defines a class HTMLParser which serves as the basis for parsing text files formatted in HTML (HyperText Mark-up Language) and XHTML.
      2. xml pakcages.
      3. The webbrowser module provides a high-level interface to allow displaying Web-based documents to users. Under most circumstances, simply calling the open() function from this module will do the right thing.
      4. urllib module provides a high-level interface for fetching data across the World Wide Web. In particular, the urlopen() function is similar to the built-in function open(), but accepts Universal Resource Locators (URLs) instead of filenames.
+*** 结构化标记处理和Web工具
+     1. HTMLParser定义了一个HTMLParser类，该类用作解析以HTML（超文本标记语言）
+        和XHTML格式设置的文本文件的基础。
+     2. xml 包.
+     3. webbrowser模块提供了高级界面，以允许向用户显示基于Web的文档。 在大多
+        数情况下，只需从此模块调用open（）函数就行。
+     4. urllib模块提供了用于在万维网上获取数据的高级接口。 特别是，urlopen（）函数
+        类似于内置函数open（），但是接受通用资源定位符（URL）而不是文件名。     
 
 *** Batteries Included
      1. Python has a “batteries included” philosophy.
      2. This is best seen through the sophisticated and robust capabilities of its larger packages.
      3. See The Python Standard Library
+*** Batteries Included
+     1. Python has a “batteries included” philosophy.
+     2. 最好的解决方案是通过其较大包的复杂和强大功能实现的。
+     3. 参阅Python标准库    
 
 * 注意事项
 *** 运算
@@ -582,17 +747,36 @@ a+1
         and a float is returned.
      3. it is possible to use the ** operator to calculate powers
      4. In interactive mode, the last printed expression is assigned to the variable _.
+*** 运算
+     1. 3/2  3.0/2
+     2. 除（/）运算的返回类型取决于其运算对象。如果两个运算对象均为int类型，
+        则执行地板除法并返回int。 如果两个运算对象均是浮点数，则执行经典除法
+        并返回浮点数。
+     3. 可以使用**运算符来计算功效
+     4. 在交互模式下，最后输出的表达式分配给变量_。
 *** multiple assignment
      1. a, b = 0, 1: the variables a and b simultaneously get the new values 0 and 1.
      2. a, b = b, a+b: expressions on the right-hand side are all evaluated
         first before any of the assignments take place. The right-hand side
         expressions are evaluated from the left to the right.
+*** 多重分配
+     1. a，b = 0，1：变量a和b同时获得新值0和1。
+     2. a，b = b，a + b：在进行任何赋值之前，将首先计算右侧的表达式。右侧
+        表达式从左到右计算。
 *** indentation
      1. indentation is Python’s way of grouping statements.
      2. At the interactive prompt, you have to type a tab or space(s) for each indented line.
      3. In practice you will prepare more complicated input for Python with a text editor; all decent text editors have an auto-indent facility.
      4. When a compound statement is entered interactively, it must be followed by a blank line to indicate completion (since the parser cannot guess when you have typed the last line).
      5. Note that each line within a basic block must be indented by the same amount.
+*** 缩进
+     1. 缩进是Python对语句进行分组的方式。
+     2. 在交互式提示下，您必须为每个缩进的行键入一个制表符或空格。
+     3. 在实践中，使用文本编辑器为Python准备更复杂的输入。所有较好的文本编
+        辑器都具有自动缩进功能。
+     4. 以交互方式输入复合语句时，必须在其后跟随一个空行以指示完成（因为解析
+        器无法猜测何时键入了最后一行）。
+     5. 请注意，基本块中的每一行都必须缩进相同的数量。    
 
 * Export Configuration 					   :noexport:ARCHIVE:
 #+LATEX_CLASS_OPTIONS: [11pt,xcolor=dvipsnames,aspectratio=43,hyperref={bookmarksdepth=4}]
