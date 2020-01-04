@@ -204,7 +204,12 @@ def fib(n):    # write Fibonacci series up to n
 *** COMMENT Documentation Strings
 *** Coding Style: PEP8
      1. Most languages can be written (or more concise, formatted) in different styles; some are more readable than others.
-     2. For Python, PEP 8 has emerged as the style guide that most projects adhere to; it promotes a very readable and eye-pleasing coding style. 
+     2. For Python, PEP8 has emerged as the style guide that most projects adhere to; it promotes a very readable and eye-pleasing coding style. 
+
+*** 编程方式: PEP8
+     1. 大多数语言可以用不同的风格来书写（或者更简洁，更格式化）。有些比其他更具可读性。.
+     2. 对于Python，PEP8已成为大多数项目所遵循的样式指南。它是一种非常易读且令人赏心悦目的编码风格。. 
+
 * Data Structures
 ** 数据类型
 *** List
@@ -216,16 +221,40 @@ def fib(n):    # write Fibonacci series up to n
      4. The list data type has some more methods, use =dir(L)= to show these mothods.
      5. =.remove=: Remove the first item from the list whose value is x. It is an error if there is no such item.
      6. the =del= statement: remove an item from a list given its index instead of its value.
+
+* 数据结构
+** 数据类型
+*** 列表
+     1. 在python中，用一对方括号 *[ ]* 来表示列表。列表除了能放相同类型的数据，也能放不同的数据.也就是说列表不限制数据类型.
+     2. 列表也可以被索引和切片.
+     3. 列表是可变类型，也就是说，可以改变它们的内容.
+     4. 列表数据类型还有更多方法，可使用 =dir(L)= 来显示这些方法.
+     5. =.remove=: 从列表中删除值为x的第一项。 如果没有这样的项，则是错误的.
+     6. =del= 语句: 从给定其索引而不是其值的列表中删除项.
+
 *** Tuple
      1. A tuple consists of a number of values separated by commas.on output tuples are always enclosed in parentheses *()* .
      2. Tuples are *immutable*, and usually contain a heterogeneous sequence of elements.
      3. the construction of tuples containing 0 or 1 items:
 	1. Empty tuples are constructed by an empty pair of parentheses;
 	2. a tuple with one item is constructed by following a value with a comma (it is not sufficient to enclose a single value in parentheses).
+
+ *** 元组
+     1. 元组由一组用逗号分隔的值组成。在输出时，元组总是用括号 *()* 括起来  .
+     2. 元组是“不可变的”，通常包含一个异类型的序列.
+     3. 包含0或1个项目的元组的构造:
+	1. 空元组由一对空括号构成;
+	2. 要创建一个单元素元组可以在值后面跟一个逗号（在括号中放入一个单值是不够的）.
 *** sequence packing and unpacking
      1. The statement t = 12345, 54321, 'hello!' is an example of tuple packing: the values 12345, 54321 and 'hello!' are packed together in a tuple.
      2. x, y, z = t, This is called sequence unpacking and works for any sequence on the right-hand side.
      3. Sequence unpacking requires the list of variables on the left to have the same number of elements as the length of the sequence.
+
+*** 序列封装与拆封
+     1. 语句t = 12345, 54321, 'hello!' 是元封装的一个例子: 值 12345, 54321 和 'hello!' 被封装到一个元组里面.
+     2. x, y, z = t, 这被称为元祖拆封，并且对右边的任何序列都成立.
+     3. 序列拆封要求左侧的变量数目与序列的元素个数相同.
+
 *** Set
      1. Python also includes a data type for sets.
      2. A set is an unordered collection with no duplicate elements.
@@ -234,7 +263,14 @@ def fib(n):    # write Fibonacci series up to n
      5. the =set()= function can be used to create sets.
      6. *Note*: to create an empty set you have to use =set()=, not =\{\}=; the latter creates an empty dictionary
 *** Examples
-
+*** 集合
+     1. Python还包含了一种数据类型——集合.
+     2. 集合是一个无序无重复元素的集.
+     3. 基本功能包括关系测试和消除重复元素.
+     4. 集合对象还支持并、交、差、和对称差集等数学运算
+     5. =set()= 可以用于创建集合.
+     6. *注意*: 如果要创建一个空集合，必须用 =set()=, 而不是 =\{\}=; 后者创建一个空的字典。
+*** 举例
 #+BEGIN_SRC python
 basket = ['apple', 'orange', 'apple', 'pear', 'orange', 'banana']
 fruit = set(basket)               # create a set without duplicates
@@ -264,7 +300,12 @@ a ^ b                              # letters in a or b but not both
         key:value pairs to the dictionary;
 
 *** Examples
-     
+
+*** 字典
+     1. 序列是以连续的整数为索引，与此不同的是，字典以关键字为索引，关键字可以是任意不可变类型，通常用字符串或数值.
+     2. 一对大括号=\{\}=创建一个空字典;在大括号中放置以逗号分隔的键:带有大括号的值对添加了初始键：字典的值对；
+
+*** 举例  
 
 #+BEGIN_SRC python
 tel = {'jack': 4098, 'sape': 4139}
