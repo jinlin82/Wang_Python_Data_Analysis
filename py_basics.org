@@ -15,26 +15,49 @@
      5. License: free and open-source software
      6. Website: www.python.org
      7. " I chose Python as a working title for the project, being in a slightly irreverent mood (and a big fan of Monty Python's Flying Circus)."
+*** 事实
+     1. 设计者：Guido van Rossum, 
+     2. 发行时间：	20 February 1991; 29 years ago
+     3. 稳定版本：
+	1. 3.5.2 / 27 June 2016; 5 months ago
+	2. 2.7.12 / 28 June 2016; 5 months ago
+     4. 操作系统：跨平台
+     5. 许可证：免费和开源软件
+     6. 官网: www.python.org
+     7. "我之所以选择python作为程序的名字，是因为设计者Guido心情不佳（同时还因为Guido是英国肥皂剧《Monty Python 飞行马戏团》的粉丝）
+  
 *** Features and philosophy
      1. Python is a *multi-paradigm* programming language: 
 	1. object-oriented programming
 	2. structured programming
 	3. and many language features support functional programming
 	4. and many other paradigm
-     2. The core philosophy of the language is summarized by the document The Zen of Python (PEP 20), which includes aphorisms such as:
-	1. Beautiful is better than ugly
-	2. Explicit is better than implicit
-	3. Simple is better than complex
-	4. Complex is better than complicated
-	5. Readability counts
+     1. The core philosophy of the language is summarized by the document The Zen of Python (PEP 20), which includes aphorisms such as:
+	5. Beautiful is better than ugly
+	6. Explicit is better than implicit
+	7. Simple is better than complex
+	8. Complex is better than complicated
+	9. Readability counts
+
+*** 特点与理念
+     1. Python是一种*多范式*语言: 
+	1. 面向对象的程序设计
+	2. 结构化程序设计
+	3. 而且许多语言特性都支持函数式编程
+	4. 许多其它范式：
+     1. 该语言的核心理念在文档The Zen of Python（PEP 20）中进行了概述，其中包括如下格言：
+	5. 美丽胜于丑陋
+	6. 明了胜于晦涩
+	7. 简单胜于复杂
+	8. 复杂胜于凌乱
+	9. 可读性很重要
 * Python Interpreter and IDE
 ** Console
 *** Python.exe--Interactive Mode
      1. When commands are read from a tty, the interpreter is said to be in interactive mode.
      2. In this mode it prompts for the next command with the primary prompt, usually three greater-than signs (=>>>=);
      3. for continuation lines it prompts with the secondary prompt, by default three dots (...).
-     4. Continuation lines are needed when entering a multi-line construct. 
-     
+     4. Continuation lines are needed when entering a multi-line construct.      
 *** IPython
      - IPython provides a rich toolkit to help you make the most of using Python interactively. Its main components are:
        1. A powerful interactive Python shell
@@ -48,15 +71,41 @@
      4. Emacs
      5. PyCharm
      6. Other
+* Python 解释器和集成开发环境
+** 控制台
+*** Python.exe--交互模式
+     1. 当命令是从tty中读取的，这时解释器就是在所谓的交互模式。
+     2. 在这个模式中它为下一个命令提供了主要提示, 经常是三个大于号 (=>>>=);
+     3. 为延续行提供了次级提示，缺省是三个点 (...).
+     4. 延续行是在输入一个多行的结构时需要的. 
+*** IPython
+     - IPythonIPython提供了一个丰富的工具包，可帮助您充分利用Python进行交互。它的主要组成部分是:
+       1. 一个强大的python交互式shell 
+       2. 一个Jupyter内核，可在Jupyter笔记本和其他交互式前端中使用Python代码
 
+** 集成开发环境
+*** 集成开发环境
+     1. IDLE
+     2. Spyder
+     3. Redeo
+     4. Emacs
+     5. PyCharm
+     6. 其它
 * Control Flow and Functions
 ** Control Flow
 *** =if= Statement
      1. The =if= statement is used for conditional execution:
      2. There can be zero or more =elif= parts, and the =else= part is optional. The
         keyword =elif= is short for =else if=, and is useful to avoid
-        excessive indentation.
+        excessive indentation.       
 *** =if= Statement example
+
+* 控制流程和功能
+** 控制流程
+*** =if= 语句
+     1. =if= 语句被用于条件执行:
+     2. 可以有多个elif语句，关键词elif是else if的缩简写，用于缩减语句长度.
+*** =if= 语句举例
 
 #+BEGIN_SRC python
 x = int(input("Please enter an integer: "))
@@ -75,6 +124,9 @@ else:
 *** =for= Statements
      - Python’s for statement iterates over the items of any sequence (a list or a string), in the order that they appear in the sequence.
 
+*** =for= 语句
+     - Python的for语句按照它们在序列中出现的顺序遍历每一个序列（列表或字符串）的项目。
+
 
 #+BEGIN_SRC python :results output :exports both
 words = ["cat", 'window', 'defenestrate']
@@ -88,7 +140,7 @@ for w in words:
 : window 6
 : defenestrate 12
 
-*** =range= function
+*** =range= Functions
      1. =range(stop)=
      2. =range(start, stop[, step])=
      3. This is a versatile function to create lists containing arithmetic progressions.
@@ -96,11 +148,28 @@ for w in words:
      5. The arguments must be plain integers.
      6. If the step argument is omitted, it defaults to 1.
      7. If the start argument is omitted, it defaults to 0. 
+
+*** =range= 函数
+     1. =range(stop)=
+     2. =range(start, stop[, step])=
+     3. 这是一个多功能函数，用于创建包含算术级数的列表.
+     4. 它最常用于for循环.
+     5. 参数必须是纯整数.
+     6. 如果省略了step参数，则默认是1.
+     7. 如果省略了start参数，则默认为0. 
+
+
 *** COMMENT while, try and with Statements
 *** COMMENT The range() Function
 *** =break= and =continue= Statements
      1. The =break= statement, breaks out of the smallest enclosing for or while loop.
      2. The =continue= statement, continues with the next iteration of the loop
+
+*** COMMENT pass Statements
+
+*** =break= and =continue= 语句
+     1. =break= 语句, 跳出最近的一级for或while循环.
+     2. =continue= 语句, 跳转到循环的下一个迭代过程
 
 *** COMMENT pass Statements
 
@@ -111,6 +180,14 @@ for w in words:
      3. The statements that form the body of the function start at the next line, and must be indented.
      4. The first statement of the function body can optionally be a string literal; this string literal is the function’s documentation string, or docstring.
 *** Examples
+
+** 函数
+*** 定义函数
+     1. 函数代码块以def关键词开头.
+     2. 后接函数名称和圆括号()，括号里面放形式参数.
+     3. 构成函数主体的语句从下一行开始，并且必须缩进.
+     4. 函数体的第一条语句可选为字符串; 这个字符串是该函数的文档字符串。
+*** 示例
 
 #+BEGIN_SRC python
 def fib(n):    # write Fibonacci series up to n
@@ -127,7 +204,12 @@ def fib(n):    # write Fibonacci series up to n
 *** COMMENT Documentation Strings
 *** Coding Style: PEP8
      1. Most languages can be written (or more concise, formatted) in different styles; some are more readable than others.
-     2. For Python, PEP 8 has emerged as the style guide that most projects adhere to; it promotes a very readable and eye-pleasing coding style. 
+     2. For Python, PEP8 has emerged as the style guide that most projects adhere to; it promotes a very readable and eye-pleasing coding style. 
+
+*** 编程方式: PEP8
+     1. 大多数语言可以用不同的风格来书写（或者更简洁，更格式化）。有些比其他更具可读性。.
+     2. 对于Python，PEP8已成为大多数项目所遵循的样式指南。它是一种非常易读且令人赏心悦目的编码风格。. 
+
 * Data Structures
 ** 数据类型
 *** List
@@ -139,16 +221,40 @@ def fib(n):    # write Fibonacci series up to n
      4. The list data type has some more methods, use =dir(L)= to show these mothods.
      5. =.remove=: Remove the first item from the list whose value is x. It is an error if there is no such item.
      6. the =del= statement: remove an item from a list given its index instead of its value.
+
+* 数据结构
+** 数据类型
+*** 列表
+     1. 在python中，用一对方括号 *[ ]* 来表示列表。列表除了能放相同类型的数据，也能放不同的数据.也就是说列表不限制数据类型.
+     2. 列表也可以被索引和切片.
+     3. 列表是可变类型，也就是说，可以改变它们的内容.
+     4. 列表数据类型还有更多方法，可使用 =dir(L)= 来显示这些方法.
+     5. =.remove=: 从列表中删除值为x的第一项。 如果没有这样的项，则是错误的.
+     6. =del= 语句: 从给定其索引而不是其值的列表中删除项.
+
 *** Tuple
      1. A tuple consists of a number of values separated by commas.on output tuples are always enclosed in parentheses *()* .
      2. Tuples are *immutable*, and usually contain a heterogeneous sequence of elements.
      3. the construction of tuples containing 0 or 1 items:
 	1. Empty tuples are constructed by an empty pair of parentheses;
 	2. a tuple with one item is constructed by following a value with a comma (it is not sufficient to enclose a single value in parentheses).
+
+ *** 元组
+     1. 元组由一组用逗号分隔的值组成。在输出时，元组总是用括号 *()* 括起来  .
+     2. 元组是“不可变的”，通常包含一个异类型的序列.
+     3. 包含0或1个项目的元组的构造:
+	1. 空元组由一对空括号构成;
+	2. 要创建一个单元素元组可以在值后面跟一个逗号（在括号中放入一个单值是不够的）.
 *** sequence packing and unpacking
      1. The statement t = 12345, 54321, 'hello!' is an example of tuple packing: the values 12345, 54321 and 'hello!' are packed together in a tuple.
      2. x, y, z = t, This is called sequence unpacking and works for any sequence on the right-hand side.
      3. Sequence unpacking requires the list of variables on the left to have the same number of elements as the length of the sequence.
+
+*** 序列封装与拆封
+     1. 语句t = 12345, 54321, 'hello!' 是元封装的一个例子: 值 12345, 54321 和 'hello!' 被封装到一个元组里面.
+     2. x, y, z = t, 这被称为元祖拆封，并且对右边的任何序列都成立.
+     3. 序列拆封要求左侧的变量数目与序列的元素个数相同.
+
 *** Set
      1. Python also includes a data type for sets.
      2. A set is an unordered collection with no duplicate elements.
@@ -157,7 +263,14 @@ def fib(n):    # write Fibonacci series up to n
      5. the =set()= function can be used to create sets.
      6. *Note*: to create an empty set you have to use =set()=, not =\{\}=; the latter creates an empty dictionary
 *** Examples
-
+*** 集合
+     1. Python还包含了一种数据类型——集合.
+     2. 集合是一个无序无重复元素的集.
+     3. 基本功能包括关系测试和消除重复元素.
+     4. 集合对象还支持并、交、差、和对称差集等数学运算
+     5. =set()= 可以用于创建集合.
+     6. *注意*: 如果要创建一个空集合，必须用 =set()=, 而不是 =\{\}=; 后者创建一个空的字典。
+*** 举例
 #+BEGIN_SRC python
 basket = ['apple', 'orange', 'apple', 'pear', 'orange', 'banana']
 fruit = set(basket)               # create a set without duplicates
@@ -187,7 +300,12 @@ a ^ b                              # letters in a or b but not both
         key:value pairs to the dictionary;
 
 *** Examples
-     
+
+*** 字典
+     1. 序列是以连续的整数为索引，与此不同的是，字典以关键字为索引，关键字可以是任意不可变类型，通常用字符串或数值.
+     2. 一对大括号=\{\}=创建一个空字典;在大括号中放置以逗号分隔的键:带有大括号的值对添加了初始键：字典的值对；
+
+*** 举例  
 
 #+BEGIN_SRC python
 tel = {'jack': 4098, 'sape': 4139}
