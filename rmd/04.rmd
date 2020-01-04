@@ -1,0 +1,235 @@
+---
+title: "线性模型"
+author: "金林"
+date: "2019-03"
+output:
+  beamer_presentation:
+    keep_tex: true
+    latex_engine: xelatex
+    pandoc_args:
+    - --listing
+    - --filter
+    - pandoc-crossref
+    slide_level: 3
+    template: ./style/beamer-template.tex
+  bookdown::html_document2:
+    fig_caption: true
+    highlight: haddock
+    keep_md: true
+    md_extensions: +east_asian_line_breaks
+    number_sections: true
+    pandoc_args:
+    - --filter
+    - pandoc-crossref
+    - -M
+    - eqnPrefix=
+    seq_numbering: false
+    theme: false
+    toc: true
+  bookdown::pdf_document2:
+    keep_tex: true
+    latex_engine: xelatex
+    md_extensions: +east_asian_line_breaks
+    pandoc_args:
+    - --listing
+    - --filter
+    - pandoc-crossref
+    toc: false
+  bookdown::word_document2:
+    fig_caption: true
+    md_extensions: +east_asian_line_breaks
+    pandoc_args:
+    - --filter
+    - pandoc-crossref
+    reference_docx: ./style/word-styles-02.docx
+  ioslides_presentation:
+    highlight: haddock
+    slide_level: 3
+css: ./style/markdown.css
+csl: ./style/chinese-gb7714-2005-numeric.csl
+bibliography: Bibfile.bib
+eqnPrefixTemplate: ($$i$$)
+institute: "中南财经政法大学统计系"
+link-citations: true
+linkReferences: true
+chapters: true
+tableEqns: false
+autoEqnLabels: false
+---
+
+
+```{r setup, echo=F}
+knitr::opts_knit$set(root.dir = getwd())
+knitr::opts_chunk$set(echo = FALSE, results = 'hide')
+knitr::opts_chunk$set(warning = FALSE, message=FALSE)
+```
+
+```{r prepare}
+rm(list=ls())
+options(digits=4)
+options(scipen=100)
+graphics.off()
+Sys.setlocale("LC_ALL", "Chinese")
+```
+
+
+
+第四章 数据的探索性分析
+在进行任何统计分析之前，都需要对数据进行探索性分析（Exploratory Data Analysis,EDA）以了解资料的性质和数据的特点。当面对一组陌生的数据时，进行探索性统计分析有助于我们掌握数据的基本情况。探索性数据分析是通过分析数据集以决定选择哪种方法适合统计推断的过程。对于一维数据，它们是否近似地服从正态分布？是否呈现拖尾或截尾分布？其分布是对称的，还是呈偏态的？分布是单峰、双峰、还是多峰的？实现这一分析的主要过程是计算基本统计量和绘制基本统计图。
+## 数据的描述分析
+### 基本描述统计量
+
+python提供了很多对数据进行基本分析的函数，表4-1所列是python对变量（序列或数据框）进行基本数据分析的函数，其中描述统计量describle可对数据做一些基本描述，默认为计算计量数据的基本统计量。
+
+### 计数数据汇总分析
+
+统计学中把取值范围是有限个值或一个数值的变量称为离散变量，其中表示分类情况的数据又称为计算数据。
+1. 频数：绝对数
+python中的.value.counts()函数可对计数数据计算频数。
+这是分类变量，来源于频数分析，说明在52名学生中有男生27人、女生25人。
+2. 频率：相对数
+频数/总数为计数数据的频率。
+这是性别的频率分析，说明在52名学生中男生占51.92%，女生占48.08%。
+
+### 计量数据汇总分析
+
+对于数值型数据，经常要分析它的集中趋势和离散程度，用来描述集中趋势的量主要有均值、中位数；描述离散程度的量主要有方差、标准差。python只需要一个命令就可以简单地得到这些结果，计算均值、中位数、方差、标准差的命令分别是mean()、media()、var()、std()。
+
+方差、标准差对异常值很敏感，这时我们可以用稳健的极差、四分位间距（IQR）来描述离散程度。python还提供了函数quantile()————对数据计算分位数，describe()————求出分位数。
+
+计量数据的基本统计量主要包括均数、中位数、极差、方差、标准差和四分位数间距等，其基本含义如下。
+
+1. 均数（算术平均数）指一组数据的除以这组数据的个数所得到的商，它反映一组数据的总体水平。对于正态分布数据，通常计算其均值，来表示其集中趋势或平均水平。
+
+2. 中位数：指一组数据按大小顺序排列，处于中间位置的一个数据（或中间两个数据的平均值），它反映了一组数据的集中趋势。对非正态分布数据，通常计算其中位数，来表示其平均水平。
+
+3. 极差：指一组数据中最大数据与最小数据的差，在统计中常用极差来刻画一组数据的离散程度。它反映的是变量分布的变异范围和离散程度，在总体中任何两个单位的数值之差都不能超过极差。
+
+4. 方差：指各数据与平均数之差的平方的平均数，它表示数据的离散程度和数据的波动大小。
+
+5. 标准差：方差的算术平方根。作用等同于方差，但单位与原数据单位是一致的。对正态分布数据，通常计算其标准差，来反映其变异水平。
+
+方差或标准差是表示一组数据的波动性的指标，因此，方差或标准差可以判断一组数据的稳定性————方差或标准差越大，数据越不稳定；方差或标准差越小，数据越稳定。
+
+6. 四分位间距（IQR）：python提供了函数quantile()，对计量数据计算分位数，
+IQR=quantile（x,0.75）-quantile(x,0.25)
+7.偏度：skew()
+8.峰度：kurt()
+python的特点在于基于对象的函数分析，python中的所有分析工具是基于函数的。要发挥python的优势，通常可构建一些数据分析函数来进行基本的数据分析。
+
+9.自编计算基本统计量函数。
+当然，这些函数还可以不断完善，例如它只能计算向量或变量数据，无法计算矩阵或数据框的数据，大家可自行编写一个计算矩阵或数据框的基本统计量函数。
+## 基本绘图命令
+### 常用的绘图函数
+matplotlib是python的基本绘图包，是一个图形框架。它是python最著名的绘图库，提供了一整套和Matlab相似的命令API，十分适合交互式地进行制图。在绘制中文图形时，须作一些基本设置。
+
+常用的统计图函数如表4-2所列。
+1. 计数数据的基本统计图
+   1.条图（bar）
+bar()在对分类数据作条形图时，须先对原始数据分组，否则作出的不是分类数据的条形图。
+
+   2.饼图（pie）
+使用命令pie(),注意：和条形图一样，对原始数据作饼图前要先分组。
+2. 计量数据的基本统计图
+   1.线图（plot）
+   2.直方图（hist）
+matplotlib里用来作直方图的函数是hist()也可以用频率作直方图，只要把density参数设置为True就可以了，默认为False。
+   3.散点图（scatter）
+这些图是python默认的形式，比较原始。我们可以通过设置不同的图形参数对图形进行调整和优化。
+
+3. 图形参数设置
+python中的每个绘图函数，都有许多参数设置选项，大多数函数的部分选项是一样的，下面列出一些主要的共同选项及其默认值。
+   1. 标题、标签、标尺及颜色。
+在使用matplotlib模块画坐标图时，往往需要对坐标轴设置很多参数，这些参数包括横纵坐标轴范围、坐标轴刻度大小、坐标轴名称等。
+
+在matplotlib中包含了很多函数，用来对这些参数进行设置。
+
+plt.xlim、plt.ylim：设置横、纵坐标轴范围；
+
+plt.xlabel、plt.ylabel：设置坐标轴名称；
+
+plt.xticks、plt.yticks：设置坐标轴刻度；
+
+colors：控制图形的颜色，'red':设置为红色。
+    2. 线型和符号。
+linestyle：控制连线的线型（-：实线，--：虚线，.：点线）；
+marker：控制符号的类型，例如，‘o’绘制实心圆点图。
+    3. 绘图函数附加图形。
+使用高级绘图函数可以画出一幅新图，而低级绘图函数只能作用于已有的图形之上。
+
+垂线：在纵坐标y处画垂直线（plt.axvline）；
+水平线：在横坐标x处画水平线（plt.axhline）。
+    4. 文字函数：text（x,y,labels,…）,在（x,y）处添加用labels指定的文字。
+    5. 图例：绘制图形后，可使用legend函数给图形加图例，见下面的分析。
+4. 误差条图
+5. 多图
+在matplotlib下，一个figure对象可以包含多个子图（Axes），可以使用subplot快速绘制，其调用形式为
+
+subplot（numRows，numCols,plotNum）
+图表的整个绘图区域被分成numRows行和numCols列。
+
+然后按照从左到右、从上到下的顺序对每个子区域进行编号，左上子区域的编号为1，plotNum参数指定创建的Axes对象所在的区域。
+### 基于pandas的绘图
+
+在pandas中，数据框有行标签、列标签及分组信息等，即要制作一张完整的图表，原本需要很多行matplotlib代码，现在只需一两条简洁的语句即可。pandas有许多能够利用DataFrame对象数据组织特点来创建标准图标的高级绘图方法（这些函数的数量还在不断增加）。
+
+对于数据框DataFrame绘图，其每列都为一个绘图图线，会将每列作为一个图线绘制到一张图片当中，并用不同的线条颜色及不同的图例标签来表示。其基本格式如下。
+1. 计量数据
+2. 计数数据
+## 数据的分类分析
+
+### 一维频数分析
+
+#### 计数数据频数分布
+1. pivot-table
+2. 自定义计数汇总函数
+
+由于python自带的value-counts()函数只能统计计数数据的个数，无法计算其频率，于是
+我们自定义一个函数tab()来进行统计和绘图。
+
+#### 计量数据频数分布
+1. 身高频数表与条图
+
+大家可试做bins=[150,160,170,180,190,200]的分组表和条图。
+
+2. 支出频数表
+3. 自定义计量频率分析函数
+由于python自带的hist函数不是以频数表的形式显示的，于是自定义一个函数freq来进行统计和绘图。
+
+### 二维集聚分析
+#### 计数数据的列联表
+1.二维列联表
+python的crosstab()函数可以把双变量分类数据整理成二维表形式。
+行和列的合计可使用参数margins=True。
+对于二维表，我们经常要计算某个数据占行、列的比例或占总和的比例，也就是边缘概率。python可以很简单地计算这些比例，使用normalize参数，normalize=‘index’表示各数据占行的比例；normalize=‘columns’表示各数据占列的比例；normalize=‘all’，表示各数据占总和的构成比例。例如：
+
+2. 复式条图
+条图用等宽直条的长短来表示相互独立的各指标数值大小，该指标可以是连续性变量的某汇总指标，也可以是分类变量的频数或构成比。各组直条间的间距应相等，，其宽度一般与直条的宽度相等或为直条宽度的一半。python作条形图的函数是bar(),不过在作条形图前须对数据进行分组。我们继续以前面的分类数据为例作条形图，粗略分析变量的分布情况。
+
+其中，stacked参数设置为False时，作出的是分段式条形图；为True时，作出的是并列式条形图，默认为False。
+
+#### 计量数据的集聚表
+pandas提供灵活高效的groupby功能，使得用户能以一种自然的方式对数据集进行切片、切块、摘要等操作；根据一个或多个键（可以是函数、数组或DataFrame列名）拆分pandas对象；计算分组摘要统计，如计数、平均值、标准差，以及用户自定义函数；对DataFrame的列应用各种各样的函数。
+
+1. 按列分组
+注意：以下使用groupby()函数生成的是一个中间分组变量，为GroupBy类型.
+
+2. 按分组统计
+在分组结果的基础上应用size()/sum()/count()等统计函数，可分别统计分组数量、不同列的分组和、不同列的分组数量。
+
+3. 应用agg()
+对于分组的某一列或多列，应用agg（func）可以对分组后的数据应用func函数，也可以推广到同时作用于多个列和使用多个函数上。
+
+4. 应用apply()
+apply()不同于agg()
+的地方在于：前者应用于dataFrame的各个列，后者仅作用于指定的列。
+
+### 多维透视分析
+#### 计数数据透视分析
+1. pivot-table
+对计数数据，前面介绍了value-counts()函数生成一维表，用crosstab()函数生成二维表，其实pivot-table()函数可以生成任意维统计表。使用pandas中pivot-table命令的各种列联表，可以实现Excel等电子表格的透视表功能，且更为灵活。
+
+#### 计量数据透视分析
+#### 复合数据透视分析
+
+
