@@ -1,14 +1,14 @@
 ---
-title: "Python数据的探索性分析"
+title: "Python编程分析基础"
 author: "金林"
 date: "2019-03"
 output:
   bookdown::html_document2:
-    fig_caption: yes
+    fig_caption: true
     highlight: haddock
-    keep_md: yes
+    keep_md: true
     md_extensions: +east_asian_line_breaks
-    number_sections: yes
+    number_sections: true
     pandoc_args:
     - --filter
     - pandoc-crossref
@@ -17,16 +17,18 @@ output:
     seq_numbering: false
     toc: true
   bookdown::pdf_document2:
-    keep_tex: yes
+    keep_tex: true
     latex_engine: xelatex
     md_extensions: +east_asian_line_breaks
     pandoc_args:
     - --listing
     - --filter
     - pandoc-crossref
-    toc: no
+    toc: false
+  slidy_presentation:
+    highlight: haddock
   bookdown::word_document2:
-    fig_caption: yes
+    fig_caption: true
     md_extensions: +east_asian_line_breaks
     pandoc_args:
     - --filter
@@ -36,7 +38,7 @@ output:
     highlight: haddock
     slide_level: 3
   beamer_presentation:
-    keep_tex: yes
+    keep_tex: true
     latex_engine: xelatex
     pandoc_args:
     - --listing
@@ -49,17 +51,17 @@ css: ./style/markdown.css
 bibliography: Bibfile.bib
 eqnPrefixTemplate: ($$i$$)
 institute: 中南财经政法大学统计系
-link-citations: yes
-linkReferences: yes
-chapters: yes
-tableEqns: no
-autoEqnLabels: no
+link-citations: true
+linkReferences: true
+chapters: true
+tableEqns: false
+autoEqnLabels: false
 ---
 
 
 ```{r setup, echo=F}
 knitr::opts_knit$set(root.dir = getwd())
-knitr::opts_chunk$set(echo = T, results = 'hide')
+knitr::opts_chunk$set(echo = TRUE, results = 'hide')
 knitr::opts_chunk$set(warning = FALSE, message=FALSE)
 ```
 
@@ -71,6 +73,7 @@ graphics.off()
 Sys.setlocale("LC_ALL", "Chinese")
 ```
 
+
 在进行任何统计分析之前，都需要对数据进行探索性分析（Exploratory Data
 Analysis,EDA）以了解资料的性质和数据的特点。当面对一组陌生的数据时，进行探索性统
 计分析有助于我们掌握数据的基本情况。探索性数据分析是通过分析数据集以决定选择哪种
@@ -81,7 +84,13 @@ Analysis,EDA）以了解资料的性质和数据的特点。当面对一组陌�
 # 数据的描述分析
 
 # 第四章 数据的探索性分析
-在进行任何统计分析之前，都需要对数据进行探索性分析（Exploratory Data Analysis,EDA）以了解资料的性质和数据的特点。当面对一组陌生的数据时，进行探索性统计分析有助于我们掌握数据的基本情况。探索性数据分析是通过分析数据集以决定选择哪种方法适合统计推断的过程。对于一维数据，它们是否近似地服从正态分布？是否呈现拖尾或截尾分布？其分布是对称的，还是呈偏态的？分布是单峰、双峰、还是多峰的？实现这一分析的主要过程是计算基本统计量和绘制基本统计图。
+在进行任何统计分析之前，都需要对数据进行探索性分析（Exploratory Data
+Analysis,EDA）以了解资料的性质和数据的特点。当面对一组陌生的数据时，进行探索性统
+计分析有助于我们掌握数据的基本情况。探索性数据分析是通过分析数据集以决定选择哪种
+方法适合统计推断的过程。对于一维数据，它们是否近似地服从正态分布？是否呈现拖尾或
+截尾分布？其分布是对称的，还是呈偏态的？分布是单峰、双峰、还是多峰的？实现这一分
+析的主要过程是计算基本统计量和绘制基本统计图。
+
 
 ## 数据的描述分析
 
