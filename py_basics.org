@@ -38,7 +38,6 @@
 	7. Simple is better than complex
 	8. Complex is better than complicated
 	9. Readability counts
-
 *** 特点与理念
      1. Python是一种*多范式*编程语言: 
 	1. 面向对象的程序设计
