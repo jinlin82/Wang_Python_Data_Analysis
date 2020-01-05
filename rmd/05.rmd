@@ -268,6 +268,7 @@ qplot('身高','体重',data=BSdata,color='性别',size='性别')
 ### 基本定义
 
 1. 图层（layer）
+
 如果你用过Photoshop，那么对于图层一定不会陌生。一个图层好比一张玻璃纸，包含各种图形元素，可以分别建立图层，然后叠放在一起，组合成图形的最终效果。图层允许用户一步步地构建图形，方便单独对图层进行修改、增加统计量，甚至改动数据。
 ```{python, eval=F}
 GP=ggplot(aes(x='身高',y='体重'),data=BSdata);GP #绘制直角坐标系
@@ -279,12 +280,15 @@ ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()+theme_bw()
 ```
 
 2. 标度（scale）
+
 标度是一种函数，它控制了数学空间到图形元素空间的映射。一组连续数据可以映射到X轴坐标，也可以映射到一组连续的渐变色彩。一组分类数据可以映射成不同的形状，也可以映射成不同的大小。
 
 3. 坐标系统（coordinate）
+
 坐标系统控制了图形的坐标轴并影响所有图形元素，最常用的是直角坐标轴，坐标轴可以进行变换以满足不同的需要，如对数坐标。其他可选的还有极坐标轴。
 
 4. 位面（facet）
+
 很多时候需要将数据按某种方法分组，分别进行绘图，位面就是控制分组绘图的方法和排列形式。
 
 ### 图层概念
@@ -292,6 +296,7 @@ ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()+theme_bw()
 下面首先用一个例子展示ggplot的绘图功能。首先加载ggplot，然后用ggplot定义第一层（即数据来源）。其中aes函数的参数非常关键，它将“身高”映射到x轴，将“体重”映射到y轴，然后使用+号添加两个新的图层，第二层加上了散点。
 
 图层的优点：
+
 用户可在更抽象层面上控制图形，使创造性绘图更容易；采用图层的设计方式，有利于结构化思维；图形美观，同时避免烦琐细节。
     
     1. 每个点都有自己图像上的属性，比如x坐标，y坐标，点的大小、颜色和形状，这些都叫做aesthetics，即图像上可观测到的属性，通过aes函数来赋值，如果不赋值，则采用python的内置默认参数。   
@@ -302,32 +307,50 @@ ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()+theme_bw()
 ### 常见图形
 
 1. 直方图
-在ggplot（BSdata，aes（x=身高））的基础上增加直方图geom-histogram(),也可以写成
-g=ggplot(BSdata，aes(x=histght));g+geom-histogram()
-2. 散点图
-衍生一点，可以不同类型画不同记号（shape）/颜色（color），
-3. 线图
-共用一个坐标，绘制不同的y值，只须将y的data赋值放到后面的geom语句中。
-4. 分面图
-使用 facet_wrap参数可以按照类型绘制分面图。
+
 ```{python, eval=F}
 ggplot(BSdata,aes(x='身高'))+ geom_histogram()
+```
 
-ggplot(BSdata,aes(x='支出'))+geom_line(aes(y='身高'))
-ggplot(BSdata,aes(x='支出'))+geom_line(aes(y='身高'))+geom_line(aes(y='体重'))
-ggplot(BSdata,aes(x='身高')) + geom_histogram() + facet_wrap('性别')
+在ggplot（BSdata，aes（x=身高））的基础上增加直方图geom-histogram(),也可以写成
+g=ggplot(BSdata，aes(x=histght));g+geom-histogram()
 
+2. 散点图
+
+```{python, eval=F}
 ggplot(BSdata,aes(x='身高',y='体重')) + geom_point()
+```
+
+衍生一点，可以不同类型画不同记号（shape）/颜色（color），
+
+```{python, eval=F}
 ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()
-ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()+theme_bw()
+```
 
-ggplot(BSdata,aes(x='身高',y='体重',size='开设',colour='性别'))+geom_point()
-ggplot(BSdata,aes(x='身高',colour='性别',fill='True')) + geom_density()
+3. 线图
+
+```{python, eval=F}
+ggplot(BSdata,aes(x='支出'))+geom_line(aes(y='身高'))
+```
+
+共用一个坐标，绘制不同的y值，只须将y的data赋值放到后面的geom语句中。
+
+```{python, eval=F}
+ggplot(BSdata,aes(x='支出'))+geom_line(aes(y='身高'))+geom_line(aes(y='体重'))
+```
+
+4. 分面图
+
+使用 facet_wrap参数可以按照类型绘制分面图。
+
+```{python, eval=F}
 ggplot(BSdata,aes(x='身高',y='体重')) + geom_point() + facet_wrap('性别')
-
-ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()+theme_bw()
 ```
 
 ### 图形主题
 
 ggplot 提供一些已经写好的主题，比如， theme_grey() 为默认主题，笔者经常用的 theme_bw() 为白色背景的主题，还有 theme_classic()主题，与python的基础画图函数类似。
+
+```{python, eval=F}
+ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()+theme_bw()
+```
