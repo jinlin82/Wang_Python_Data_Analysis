@@ -663,13 +663,13 @@ python是一种面向对象的语言（一般使用者可不了解）。
 下面就通过编写一个函数的过程来简单介绍python的函数自定义方法和面向对象技术。如计
 算向量X=（x1,x2,…,xn）的离均差平方和函数：
 
-```{python, eval=F}
+```{python}
 def SS1(x):
     n=len(x)
     ss=sum(x**2)-sum(x)**2/n
     return(ss)
 
-SS1(X) 
+SS1(S1) 
 
 def SS2(x): 
     n=len(x)
@@ -677,15 +677,15 @@ def SS2(x):
     ss=sum(x**2)-sum(x)**2/n
     return[x**2,n,xm,ss]
 
-SS2(X) 
+SS2(S1) 
 
-SS2(X)[0] 
-SS2(X)[1] 
-SS2(X)[2] 
-SS2(X)[3] 
+SS2(S1)[0] 
+SS2(S1)[1] 
+SS2(S1)[2] 
+SS2(S1)[3] 
 
-type(SS2(X))
-type(SS2(X)[3])
+type(SS2(S1))
+type(SS2(S1)[3])
 ```
 
 有了离均差平方和函数，就可做许多统计计算，如计算方差、标准差，进行方差分析等。该
