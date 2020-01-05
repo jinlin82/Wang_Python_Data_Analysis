@@ -763,6 +763,7 @@ a+1
      3. In practice you will prepare more complicated input for Python with a text editor; all decent text editors have an auto-indent facility.
      4. When a compound statement is entered interactively, it must be followed by a blank line to indicate completion (since the parser cannot guess when you have typed the last line).
      5. Note that each line within a basic block must be indented by the same amount.
+     
 *** 缩进
      1. 缩进是Python对语句进行分组的方式。
      2. 在交互式提示下，您必须为每个缩进的行键入一个制表符或空格。
