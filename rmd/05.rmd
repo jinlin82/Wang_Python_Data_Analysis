@@ -1,7 +1,7 @@
 ---
-title: "Python数据的可视化分析"
+title: "Python数据可视化分析"
 author: "金林"
-date: "2019-03"
+date: "2020-01"
 output:
   bookdown::html_document2:
     fig_caption: true
@@ -19,6 +19,7 @@ output:
   beamer_presentation:
     keep_tex: true
     latex_engine: xelatex
+    toc: true
     pandoc_args:
     - --listing
     - --filter
@@ -48,7 +49,7 @@ css: ./style/markdown.css
 csl: ./style/chinese-gb7714-2005-numeric.csl
 bibliography: Bibfile.bib
 eqnPrefixTemplate: ($$i$$)
-institute: "中南财经政法大学统计系"
+institute: "中南财经政法大学统计与数学学院"
 link-citations: true
 linkReferences: true
 chapters: true
@@ -57,13 +58,13 @@ autoEqnLabels: false
 ---
 
 
-```{r setup, echo=F}
+```{r setup, echo=F, purl=F}
 knitr::opts_knit$set(root.dir = getwd())
 knitr::opts_chunk$set(echo = T, results = 'hide')
 knitr::opts_chunk$set(warning = FALSE, message=FALSE)
 ```
 
-```{r prepare, echo=F}
+```{r prepare, echo=F, purl=F}
 rm(list=ls())
 options(digits=4)
 options(scipen=100)
@@ -71,24 +72,23 @@ graphics.off()
 Sys.setlocale("LC_ALL", "Chinese")
 ```
 
+### 数据可视化简介
 
-数据可视化旨在借助于图形化手段，清晰有效地传达与沟通信息，但是，这并不意味着数据
-可视化就一定因为要实现其功能而令人感到枯燥乏味，或者为了为了看上去绚丽多彩而显得
-极端复杂。为了有效地传达思想观念，美学形式与功能需要齐头并进，通过直观地传达关键
-的方面与特征，来实现对于相当稀疏而又复杂的数据集的深入洞察。然而，设计人员往往并
-不能很好地把握设计与功能之间的平衡，从而设计出华而不实的数据可视化形式，无法达到
-其主要目的，也就是传达与沟通信息。
-
-
-数据可视化与信息图形、信息可视化、科学可视化是一个极为活跃而又关键的方面。“数据
-可视化”这条术语实现了成熟的科学可视化领域与较年轻的信息可视化领域的统一。
+1. 数据可视化旨在借助于图形化手段，清晰有效地传达与沟通信息，
+2. 但是，这并不意味着数据可视化就一定因为要实现其功能而令人感到枯燥乏味，或者为
+   了为了看上去绚丽多彩而显得极端复杂。
+3. 为了有效地传达思想观念，美学形式与功能需要齐头并进，通过直观地传达关键的方面
+   与特征，来实现对于相当稀疏而又复杂的数据集的深入洞察。
+4. 避免没有把握好设计与功能之间的平衡，从而设计出华而不实的数据可视化形式，无法
+   达到其主要目的，也就是传达与沟通信息。
+5. 数据可视化与信息图形、信息可视化、科学可视化及统计图形关系密切。
+6. “数据可视化”术语实现了成熟的科学可视化领域与较年轻的信息可视化领域的统一。
 
 
 # 特殊统计图的绘制
 
-## 数学函数图
+### 初等函数图
 
-1. 初等函数图
 ```{python, fig.cap="初等函数图", dev='png'}
 import math
 import numpy as np
@@ -101,7 +101,8 @@ plt.plot(x,np.log(x))
 plt.plot(x,np.exp(x))
 ```
 
-2. 极坐标图（加公式）
+### 极坐标图（加公式）
+
 根据函数式的基本绘图，在直角坐标系下可使用参数方程：
 ```{python, fig.cap="极坐标图（加公式）", dev='png'}
 t=np.linspace(0,2*math.pi)
@@ -112,14 +113,17 @@ plt.text(0,0,r'$\frac{x^2}{2}+\frac{y^2}{3}=1$',fontsize=15)
 ```
 
 
-## 气泡图
-```{python, eval=F}
+### 气泡图
+
+```{python, eval=T}
+import pandas as pd
 BSdata = pd.read_csv('../data/BSdata.csv',encoding="utf-8")
 plt.scatter(BSdata['身高'], BSdata['体重'], s=BSdata['支出'])
 ```
 
 
-## 三维曲面图
+### 三维曲面图
+
 ```{python, fig.cap="三维曲面图", dev='png'}
 from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
@@ -132,8 +136,9 @@ ax.plot_surface(X, Y, Z);
 ```
 
 
-## 三维散点计绘图
-```{python, eval=F}
+### 三维散点图
+
+```{python, eval=T}
 from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
 ax = Axes3D(fig)
@@ -141,39 +146,55 @@ ax.scatter(BSdata['身高'], BSdata['体重'], BSdata['支出'])
 ```
 
 # seaborn 统计绘图
-seaborn在matplotlib的基础上进行了更高级的API封装，从而使得作图更加容易，在大多数情况下，使用seaborn就能作出相当具有吸引力的图，而使用matplotlib能制作具有更多特色的图。应该把seaborn视为matplotlib的补充，而不是替代物。seaborn是针对统计绘图的，较为方便。
+
+### seaborn 简介
+
+1. seaborn在matplotlib的基础上进行了更高级的API封装，从而使得作图更加容易，
+2. 在大多数情况下，使用seaborn就能作出相当具有吸引力的图，而使用matplotlib能制作
+   具有更多特色的图。
+3. 应该把seaborn视为matplotlib的补充，而不是替代物。
+4. seaborn针对统计绘图较为方便。
+
 ```{python}
 import seaborn as sns
 ```
 
-一般来说，seaborn能满足数据分析90%的统计绘图需求。如果需要复杂的自定义图形，则要用matplotlit；如果需要精细绘图，则需要参照seaborn的文档。这里简要介绍常用的图形及参数。
+5. 一般来说，seaborn能满足数据分析90%的统计绘图需求。
+6. 如果需要复杂的自定义图形，则要用matplotlit。
 
 ## 基本概念
 
 ### 分组绘图
 
-比如，需要在一张图上绘制两条曲线，分别是南方和北方的气温变化，用不同的颜色加以区分，这就是分组绘图。在seaborn中用hue参数控制分组绘图。
+1. 比如，需要在一张图上绘制两条曲线，分别是南方和北方的气温变化，用不同的颜色加
+   以区分，这就是分组绘图。
+2. 在seaborn中用hue参数控制分组绘图。
 
 ### 分面绘图
 
-分面绘图其实就是在一张纸上划分不同的区域，比如2*2的子区域，在不同的子区域绘制不同的图形，在matplotlib中就是add-subplot（2，2，1），在seaborn中用col参数控制，col的全称是columns是，不是color，如果辅助col-wrap参数，效果会更好。col可以控制columns的子图，row可以控制rows的子图排列。
-
-如果需要分面绘图，则应该使用seaborn的FacetGrid对象，seaborn的一般绘图函数是没有“分面”这个参数的。
+1. 分面绘图其实就是在一张纸上划分不同的区域，比如2*2的子区域，在不同的子区域绘制
+   不同的图形，
+2. 在matplotlib中就是add-subplot（2，2，1），
+3. 在seaborn中用col参数控制，col的全称是columns是，不是color，如果辅助col-wrap参
+   数，效果会更好。
+4. col可以控制columns的子图，row可以控制rows的子图排列。
+5. 如果需要分面绘图，则应该使用seaborn的FacetGrid对象，seaborn的一般绘图函数是没
+   有“分面”这个参数的。
 
 ### 统计函数绘图
 
-分组绘图的时候，会对分组变量先用统计函数进行处理，然后绘图，比如先计算变量的均值，然后绘制该均值的直方图。统计绘图参数是estimator，很多情况下默认为numpy.mean。如果不适用统计绘图，就需要先用pandas进行groupby分组汇总，然后用seaborn绘图。
+1. 分组绘图的时候，会对分组变量先用统计函数进行处理，然后绘图，
+2. 比如先计算变量的均值，然后绘制该均值的直方图。
+3. 统计绘图参数是estimator，很多情况下默认为numpy.mean。如果不适用，就需要先用pandas进行groupby分组汇总，然后用seaborn绘图。
 
 ## 常用统计图
 
-在seaborn中，图形大概分以下几类：因子变量绘图、数值变量绘图、两变量关系绘图、时间序列图、热力图、分面绘图等。这里重点介绍因子变量绘图，
-
 ### 箱线图（boxplot）
 
-竖着放的箱线图，也就是将x换成y。
+1. 竖着放的箱线图，也就是将x换成y。
+2. 分组绘制箱线图，分组因子是“性别”，在x轴不同位置绘制。
 
-分组绘制箱线图，分组因子是“性别”，在x轴不同位置绘制。
-```{python, eval=F}
+```{python, eval=T}
 # 绘制箱线图
 sns.boxplot(x=BSdata['身高'])
 # 竖着放的箱线图，也就是将x换成y
@@ -186,79 +207,103 @@ sns.boxplot(x='开设', y='支出',hue='性别',data=BSdata)
 ```
 
 ### 小提琴图（violinplot）
-```{python, eval=F}
+
+```{python, eval=T}
 sns.violinplot(x='性别', y='身高',data=BSdata)
 sns.violinplot(x='开设', y='支出',hue='性别',data=BSdata)
 ```
 
 ### 点图（stripplot）
-```{python, eval=F}
+
+```{python, eval=T}
 sns.stripplot(x='性别', y='身高',data=BSdata)
 sns.stripplot(x='性别', y='身高',data=BSdata,jitter=True)
 sns.stripplot(y='性别', x='身高',data=BSdata,jitter=True)
 ```
 
 ### 条图（barplot）
-```{python, eval=F}
+
+```{python, eval=T}
 sns.barplot(x='性别', y='身高',data=BSdata,ci=0,palette="Blues_d")
 ```
 
 ### 计数图（countplot）
-```{python, eval=F}
+
+```{python, eval=T}
 sns.countplot(x='性别',data=BSdata)
 sns.countplot(y='开设',data=BSdata)
 sns.countplot(x='性别',hue="开设",data=BSdata)
 ```
 
-### 分组关系图（factorplot）
-```{python, eval=F}
-sns.factorplot(x='性别',col="开设", col_wrap=3,data=BSdata, kind="count", size=2.5, aspect=.8)
+### 分组关系图（catplot）
+```{python, eval=T}
+sns.catplot(x='性别',col="开设", col_wrap=3,data=BSdata, kind="count", height=2.5, aspect=.8)
 ```
 
 ### 概率分布图（distplot）
 
-概率分布图包括单变量核密度曲线、直方图、双变量与多变量的联合直方图和密度图。
-
-针对单变量，使用seaborn的distplot()函数，它集合了matplotlib的hist()与核函数估计kdeplot的功能。kde控制是否画kde曲线，bins是分组数，rug控制是否画样本点。
-
-针对双变量，使用seaborn中的jointplot()函数。
-
-针对多变量，使用seaborn中的pairlot()函数，默认对角线为直方图（histgram），非对角线为散点图。
+1. 概率分布图包括单变量核密度曲线、直方图、双变量与多变量的联合直方图和密度图。
+2. 针对单变量，使用seaborn的distplot()函数，它集合了matplotlib的hist()与核函数估
+   计kdeplot的功能。
+3. kde控制是否画kde曲线，bins是分组数，rug控制是否画样本点。
+4. 针对双变量，使用seaborn中的jointplot()函数。
+5. 针对多变量，使用seaborn中的pairlot()函数，默认对角线为直方图（histgram），非
+   对角线为散点图。
+   
 ```{python, eval=F}
 sns.distplot(BSdata['身高'], kde=True, bins=20, rug=True);
-
 sns.jointplot(x='身高', y='体重', data=BSdata);
-
 sns.pairplot(BSdata[['身高','体重','支出']]);
 ```
 
 # ggplot绘图系统
 
-ggplot是用于绘图的python扩展包，其理念根植于Grammay of Graphics一书。它将绘图视为一种映射，即从数学空间映射到图形元素空间。例如，将不同的数值映射到不同的色彩或透明度。该绘图包的特点在于，并不去定义具体的图形（如直方图、散点图），而是定义各种底层组件（如线条、方块）来合成复杂的图形，这使它能以非常简洁的函数构建各类图形，而且默认条件下的绘图品质就能达到印刷精度。
+### ggplot 简介
+
+1. ggplot是用于绘图的python扩展包，其理念根植于Grammay of Graphics一书。
+2. 它将绘图视为一种映射，即从数学空间映射到图形元素空间。例如，将不同的数值映射
+   到不同的色彩或透明度。
+3. 该绘图包的特点在于，并不去定义具体的图形（如直方图、散点图），而是定义各种底
+   层组件（如线条、方块）来合成复杂的图形，这使它能以非常简洁的函数构建各类图形，
+   而且默认条件下的绘图品质就能达到印刷精度。
+4. cmd中运行以下代码安装
+   
+```{python, eval=F}
+conda install -c conda-forge ggplot
+```
 
 ## qplot快速制图
 
-对于初学者，ggplot提供了qplot函数，可以快捷地绘制多种图形，下面来看具体操作方法。
-```{python, eval=F}
+### qplot 函数
+
+1. 对于初学者，ggplot提供了qplot函数，可以快捷地绘制多种图形。
+   
+```{python}
 from ggplot import *
+import matplotlib.pyplot as plt              #基本绘图包
+
+plt.rcParams['font.sans-serif']=['KaiTi'];   #SimHei黑体
+
+plt.rcParams['axes.unicode_minus']=False;    #正常显示图中负号
 ```
 
 ### 直方图
-```{python, eval=F}
+```{python}
 qplot('身高',data=BSdata, geom='histogram')
 ```
 
 ### 条形图
-```{python, eval=F}
+```{python}
 qplot('开设',data=BSdata, geom='bar')
 ```
 
 ### 散点图
 
-散点图用来描述两个定量数据变量间的关系，对于多元数据，通常可以用散点颜色和大小来反映不同的属性，下面对“身高”与“体重”变量进行绘图，其中color参数指定不同的性别所显示点的颜色。
+1. 散点图用来描述两个定量数据变量间的关系，对于多元数据，通常可以用散点颜色和大
+   小来反映不同的属性，
+2. 下面对“身高”与“体重”变量进行绘图，其中color参数指定不同的性别所显示点的颜色。
 
-由此可见，简单的qplot函数就有如此强大的威力，要发挥出ggplot的全部潜能，还需要掌握更多的语法。
-```{python, eval=F}
+```{python}
 qplot('身高','体重',data=BSdata,color='性别')
 qplot('身高','体重',data=BSdata,color='性别',size='性别')
 ```
@@ -269,8 +314,12 @@ qplot('身高','体重',data=BSdata,color='性别',size='性别')
 
 1. 图层（layer）
 
-如果你用过Photoshop，那么对于图层一定不会陌生。一个图层好比一张玻璃纸，包含各种图形元素，可以分别建立图层，然后叠放在一起，组合成图形的最终效果。图层允许用户一步步地构建图形，方便单独对图层进行修改、增加统计量，甚至改动数据。
-```{python, eval=F}
+
+如果你用过Photoshop，那么对于图层一定不会陌生。一个图层好比一张玻璃纸，包含各种
+图形元素，可以分别建立图层，然后叠放在一起，组合成图形的最终效果。图层允许用户一
+步步地构建图形，方便单独对图层进行修改、增加统计量，甚至改动数据。
+
+```{python}
 GP=ggplot(aes(x='身高',y='体重'),data=BSdata);GP #绘制直角坐标系
 GP + geom_point()                  #增加点图
 GP + geom_line()                   #增加线图
@@ -278,6 +327,8 @@ GP + geom_line()                   #增加线图
 ggplot(BSdata,aes(x='身高',y='体重')) + geom_point() + geom_line()
 ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()+theme_bw()
 ```
+
+### 基本定义
 
 2. 标度（scale）
 
@@ -293,64 +344,74 @@ ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()+theme_bw()
 
 ### 图层概念
 
-下面首先用一个例子展示ggplot的绘图功能。首先加载ggplot，然后用ggplot定义第一层（即数据来源）。其中aes函数的参数非常关键，它将“身高”映射到x轴，将“体重”映射到y轴，然后使用+号添加两个新的图层，第二层加上了散点。
+1. 下面首先用一个例子展示ggplot的绘图功能。
+2. 首先加载ggplot，然后用ggplot定义第一层（即数据来源）。
+3. 其中aes函数的参数非常关键，它将“身高”映射到x轴，将“体重”映射到y轴，然后使用+号添加两个新的图层，第二层加上了散点。
 
-图层的优点：
+### 图层的优点
 
-用户可在更抽象层面上控制图形，使创造性绘图更容易；采用图层的设计方式，有利于结构化思维；图形美观，同时避免烦琐细节。
-    
-    1. 每个点都有自己图像上的属性，比如x坐标，y坐标，点的大小、颜色和形状，这些都叫做aesthetics，即图像上可观测到的属性，通过aes函数来赋值，如果不赋值，则采用python的内置默认参数。   
-    2. ggplot先做mapping，设定画图对象的x坐标和y坐标，以及点的颜色、形状，其描述对象的方式都是数据类型（通过aes函数来设定参数），然后再做沙岭，把映射的数据转化为图形语言，如转化为像素大小。
-    3. geom确定图像的“type”，即几何特征，用点来描述图像，还是用柱或条形。
-    4. 关于变量问题，ggplot函数中赋予的值是全局性质的，如果不希望全局生效，则放到后面+对应的图层中。
+1. 用户可在更抽象层面上控制图形，使创造性绘图更容易；采用图层的设计方式，有利于
+   结构化思维；图形美观，同时避免烦琐细节。
+2. 每个点都有自己图像上的属性，比如x坐标，y坐标，点的大小、颜色和形状，这些都叫做aesthetics，即图像上可观测到的属性，通过aes函数来赋值，如果不赋值，则采用python的内置默认参数。   
+3. ggplot先做mapping，设定画图对象的x坐标和y坐标，以及点的颜色、形状，其描述对象的方式都是数据类型（通过aes函数来设定参数），然后再做沙岭，把映射的数据转化为图形语言，如转化为像素大小。
+4. geom确定图像的“type”，即几何特征，用点来描述图像，还是用柱或条形。
+5. 关于变量问题，ggplot函数中赋予的值是全局性质的，如果不希望全局生效，则放到后面+对应的图层中。
 
 ### 常见图形
 
 1. 直方图
 
-```{python, eval=F}
+```{python}
 ggplot(BSdata,aes(x='身高'))+ geom_histogram()
 ```
 
-在ggplot（BSdata，aes（x=身高））的基础上增加直方图geom-histogram(),也可以写成
-g=ggplot(BSdata，aes(x=histght));g+geom-histogram()
+在 `ggplot(BSdata，aes(x=身高))` 的基础上增加直方图 `geom-histogram()` ,也可以写成
+`g=ggplot(BSdata，aes(x=histght));g+geom-histogram()`
+
+### 常见图形
 
 2. 散点图
 
-```{python, eval=F}
+```{python}
 ggplot(BSdata,aes(x='身高',y='体重')) + geom_point()
 ```
 
-衍生一点，可以不同类型画不同记号（shape）/颜色（color），
+可以不同类型画不同记号（shape）/颜色（color），
 
-```{python, eval=F}
+```{python}
 ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()
 ```
 
+### 常见图形
+
 3. 线图
 
-```{python, eval=F}
+```{python}
 ggplot(BSdata,aes(x='支出'))+geom_line(aes(y='身高'))
 ```
 
 共用一个坐标，绘制不同的y值，只须将y的data赋值放到后面的geom语句中。
 
-```{python, eval=F}
+```{python}
 ggplot(BSdata,aes(x='支出'))+geom_line(aes(y='身高'))+geom_line(aes(y='体重'))
 ```
+
+### 常见图形
 
 4. 分面图
 
 使用 facet_wrap参数可以按照类型绘制分面图。
 
-```{python, eval=F}
+```{python}
 ggplot(BSdata,aes(x='身高',y='体重')) + geom_point() + facet_wrap('性别')
 ```
 
 ### 图形主题
 
-ggplot 提供一些已经写好的主题，比如， theme_grey() 为默认主题，笔者经常用的 theme_bw() 为白色背景的主题，还有 theme_classic()主题，与python的基础画图函数类似。
+1. ggplot 提供一些已经写好的主题，比如， theme_grey() 为默认主题
+2. theme_bw() 为白色背景的主题，
+3. theme_classic()主题，与python的基础画图函数类似。
 
-```{python, eval=F}
+```{python}
 ggplot(BSdata,aes(x='身高',y='体重',color='性别'))+geom_point()+theme_bw()
 ```

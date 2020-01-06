@@ -1,7 +1,7 @@
 ---
-title: "Python编程分析基础"
+title: "Python探索性数据分析"
 author: "金林"
-date: "2019-03"
+date: "2020-01"
 output:
   bookdown::html_document2:
     fig_caption: true
@@ -40,6 +40,7 @@ output:
   beamer_presentation:
     keep_tex: true
     latex_engine: xelatex
+    toc: true
     pandoc_args:
     - --listing
     - --filter
@@ -50,7 +51,7 @@ csl: ./style/chinese-gb7714-2005-numeric.csl
 css: ./style/markdown.css
 bibliography: Bibfile.bib
 eqnPrefixTemplate: ($$i$$)
-institute: 中南财经政法大学统计系
+institute: 中南财经政法大学统计与数学学院
 link-citations: true
 linkReferences: true
 chapters: true
@@ -59,13 +60,14 @@ autoEqnLabels: false
 ---
 
 
-```{r setup, echo=F}
+```{r setup, echo=F, purl=F}
 knitr::opts_knit$set(root.dir = getwd())
 knitr::opts_chunk$set(echo = TRUE, results = 'hide')
 knitr::opts_chunk$set(warning = FALSE, message=FALSE)
+knitr::opts_chunk$set(out.height="0.5\\textwidth", fig.width=5, fig.height=3, fig.align="center")
 ```
 
-```{r prepare, echo=F}
+```{r prepare, echo=F, purl=F}
 rm(list=ls())
 options(digits=4)
 options(scipen=100)
@@ -73,26 +75,32 @@ graphics.off()
 Sys.setlocale("LC_ALL", "Chinese")
 ```
 
+# 数据的描述分析
 
-在进行任何统计分析之前，都需要对数据进行探索性分析（Exploratory Data
-Analysis,EDA）以了解资料的性质和数据的特点。当面对一组陌生的数据时，进行探索性统
-计分析有助于我们掌握数据的基本情况。探索性数据分析是通过分析数据集以决定选择哪种
-方法适合统计推断的过程。对于一维数据，它们是否近似地服从正态分布？是否呈现拖尾或
-截尾分布？其分布是对称的，还是呈偏态的？分布是单峰、双峰、还是多峰的？实现这一分
-析的主要过程是计算基本统计量和绘制基本统计图。
+### 简介
 
-# 第四章 数据的探索性分析
-在进行任何统计分析之前，都需要对数据进行探索性分析（Exploratory Data
-Analysis,EDA）以了解资料的性质和数据的特点。当面对一组陌生的数据时，进行探索性统
-计分析有助于我们掌握数据的基本情况。探索性数据分析是通过分析数据集以决定选择哪种
-方法适合统计推断的过程。对于一维数据，它们是否近似地服从正态分布？是否呈现拖尾或
-截尾分布？其分布是对称的，还是呈偏态的？分布是单峰、双峰、还是多峰的？实现这一分
-析的主要过程是计算基本统计量和绘制基本统计图。
-
-
-## 数据的描述分析
+1. 在进行任何统计分析之前，都需要对数据进行探索性分析（Exploratory Data
+   Analysis,EDA）以了解资料的性质和数据的特点。
+2. 当面对一组陌生的数据时，进行探索性统计分析有助于我们掌握数据的基本情况。
+3. 探索性数据分析是通过分析数据集以决定选择哪种方法适合统计推断的过程。
+4. 对于一维数据，它们是否近似地服从正态分布？是否呈现拖尾或截尾分布？其分布是对
+   称的，还是呈偏态的？分布是单峰、双峰、还是多峰的？
+5. 实现这一分析的主要过程是计算基本统计量和绘制基本统计图。
 
 ### 基本描述统计量
+
+- python提供了很多对数据进行基本分析的函数，
+- 下表所列是python对变量（序列或数据框）进行基本数据分析的函数，其中描述统计量
+  describle可对数据做一些基本描述，默认为计算定量数据的基本统计量。
+
+|    定性数据    |    用途    |  定量数据  |  用途  |
+| :------------: | :--------: | :--------: | :----: |
+| value_counts() | 一维频数表 |   mean()   |  均值  |
+|   crosstab()   | 二维列联表 |  median()  | 中位数 |
+| pivot_table()  | 多维透视表 | quantile() | 分位数 |
+|                |            |   std()    | 标准差 |
+
+### 代码
 
 ```{python}
 import numpy as np
@@ -102,20 +110,12 @@ BSdata.describe()
 BSdata[['性别','开设','课程','软件']].describe()
 ```
 
-python提供了很多对数据进行基本分析的函数，表4-1所列是python对变量（序列或数据框）进行基本数据分析的函数，其中描述统计量describle可对数据做一些基本描述，默认为计算计量数据的基本统计量。
+### 定性数据汇总分析
 
-|    计数数据    |    用途    |  计量数据  |  用途  |
-| :------------: | :--------: | :--------: | :----: |
-| value_counts() | 一维频数表 |   mean()   |  均值  |
-|   crosstab()   | 二维列联表 |  median()  | 中位数 |
-| pivot_table()  | 多维透视表 | quantile() | 分位数 |
-|                |            |   std()    | 标准差 |
-
-## 计数数据汇总分析
-
-统计学中把取值范围是有限个值或一个数值的变量称为离散变量，其中表示分类情况的数据又称为计算数据。
+- 统计学中把取值范围是有限个值或一个数值的变量称为离散变量，其中表示分类情况的数
+  据又称为定性数据。
 1. 频数：绝对数
-python中的.value.counts()函数可对计数数据计算频数。
+python中的.value.counts()函数可对定性数据计算频数。
 
 ```{python}
 T1=BSdata.性别.value_counts();T1
@@ -124,7 +124,7 @@ T1=BSdata.性别.value_counts();T1
 这是分类变量，来源于频数分析，说明在52名学生中有男生27人、女生25人。
 
 2. 频率：相对数
-频数/总数为计数数据的频率。
+频数/总数为定性数据的频率。
 
 ```{python}
 T1/sum(T1)*100
@@ -132,13 +132,17 @@ T1/sum(T1)*100
 
 这是性别的频率分析，说明在52名学生中男生占51.92%，女生占48.08%。
 
-## 计量数据汇总分析
+### 定量数据汇总分析
 
-对于数值型数据，经常要分析它的集中趋势和离散程度，用来描述集中趋势的量主要有均值、中位数；描述离散程度的量主要有方差、标准差。python只需要一个命令就可以简单地得到这些结果，计算均值、中位数、方差、标准差的命令分别是mean()、media()、var()、std()。
+- 对于数值型数据，经常要分析它的集中趋势和离散程度，用来描述集中趋势的量主要有均
+  值、中位数；
+- 描述离散程度的量主要有方差、标准差。
+- python只需要一个命令就可以简单地得到这些结果，计算均值、中位数、方差、标准差的
+  命令分别是mean()、media()、var()、std()。
+- 方差、标准差对异常值很敏感，这时我们可以用稳健的极差、四分位间距来描述离散程度。
+- python还提供了函数quantile()——对数据计算分位数，describe()——求出分位数。
 
-方差、标准差对异常值很敏感，这时我们可以用稳健的极差、四分位间距（IQR）来描述离散程度。python还提供了函数quantile()————对数据计算分位数，describe()————求出分位数。
-
-计量数据的基本统计量主要包括均数、中位数、极差、方差、标准差和四分位数间距等，其基本含义如下。
+### 定量数据汇总分析
 
 1. 均数（算术平均数）指一组数据的除以这组数据的个数所得到的商，它反映一组数据的总体水平。对于正态分布数据，通常计算其均值，来表示其集中趋势或平均水平。
 
@@ -158,6 +162,8 @@ BSdata.身高.median()
 BSdata.身高.max()-BSdata.身高.min()
 ```
 
+### 定量数据汇总分析
+
 4. 方差：指各数据与平均数之差的平方的平均数，它表示数据的离散程度和数据的波动大小。
 
 ```{python}
@@ -170,36 +176,32 @@ BSdata.身高.var()
 BSdata.身高.std()
 ```
 
-方差或标准差是表示一组数据的波动性的指标，因此，方差或标准差可以判断一组数据的稳定性————方差或标准差越大，数据越不稳定；方差或标准差越小，数据越稳定。
+方差或标准差是表示一组数据的波动性的指标，因此，方差或标准差可以判断一组数据的稳定性——方差或标准差越大，数据越不稳定；方差或标准差越小，数据越稳定。
 
-6. 四分位间距（IQR）：python提供了函数quantile()，对计量数据计算分位数，IQR=quantile（x,0.75）-quantile(x,0.25)
+
+### 定量数据汇总分析
+
+6. 四分位间距（IQR）：python提供了函数quantile()，对定量数据计算分位数，IQR=quantile（x,0.75）-quantile(x,0.25)
 
 ```{python}
 BSdata.身高.quantile(0.75)-BSdata.身高.quantile(0.25)
 ```
 
-7.偏度：skew()
+7. 偏度：skew()
 
 ```{python}
 BSdata.身高.skew()
 ```
 
-8.峰度：kurt()
+8. 峰度：kurt()
 
 ```{python}
 BSdata.身高.kurt()
 ```
 
-python的特点在于基于对象的函数分析，python中的所有分析工具是基于函数的。要发挥python的优势，通常可构建一些数据分析函数来进行基本的数据分析。
-9. 自编计算基本统计量函数。
-当然，这些函数还可以不断完善，例如它只能计算向量或变量数据，无法计算矩阵或数据框
-的数据，大家可自行编写一个计算矩阵或数据框的基本统计量函数。
+### 自编计算基本统计量函数
 
-# 基本绘图命令
-
-## 常用的绘图函数
-
-9.自编计算基本统计量函数。
+- 要发挥python的优势，通常可构建一些数据分析函数来进行基本的数据分析。
 
 ```{python}
 def stats(x):
@@ -207,61 +209,72 @@ def stats(x):
          x.quantile(.75),x.max(),x.max()-x.min(),x.var(),x.std(),x.skew(),x.kurt()]
     stat=pd.Series(stat,index=['Count','Min', 'Q1(25%)','Mean','Median',
                    'Q3(75%)','Max','Range','Var','Std','Skew','Kurt'])
-    x.plot(kind='kde') #拟合核密度 kde 曲线，见下节
     return(stat)
+
 stats(BSdata.身高)
 stats(BSdata.支出)
 ```
 
-当然，这些函数还可以不断完善，例如它只能计算向量或变量数据，无法计算矩阵或数据框的数据，大家可自行编写一个计算矩阵或数据框的基本统计量函数。
+- 这些函数还可以不断完善，例如它只能计算向量或变量数据，无法计算矩阵或数据框的数据，大家可自行编写一个计算矩阵或数据框的基本统计量函数。
 
-## 基本绘图命令
+# 基本绘图命令
+
+## 常用绘图函数
 
 ### 常用的绘图函数
 
-matplotlib是python的基本绘图包，是一个图形框架。它是python最著名的绘图库，提供了一整套和Matlab相似的命令API，十分适合交互式地进行制图。在绘制中文图形时，须作一些基本设置。
+1. matplotlib是python的基本绘图包，是一个图形框架。
+2. 它是python最著名的绘图库，提供了一整套和Matlab相似的命令API，十分适合交互式地
+   进行制图。
+3. 在绘制中文图形时，须作一些基本设置。
 
 ```{python}
 import matplotlib.pyplot as plt              #基本绘图包
 plt.rcParams['font.sans-serif']=['KaiTi'];   #SimHei黑体
 plt.rcParams['axes.unicode_minus']=False;    #正常显示图中负号
-plt.figure(figsize=(6,5));                   #图形大小
+# plt.figure(figsize=(6,5));                   #图形大小
 ```
 
-常用的统计图函数如表4-2所列。
+### 常见统计作图函数
 
-| 计数数据 | 用途 | 计量数据 | 用途   |
+- 常用的统计图函数如下表所列
+
+| 定性数据 | 用途 | 定量数据 | 用途   |
 | :------: | ---- | -------- | ------ |
 |  bar()   | 条图 | plot()   | 折线图 |
 |  pie()   | 饼图 | hist()   | 直方图 |
 
-1. 计数数据的基本统计图
-   
-   1.条图（bar）
+## 定性数据作图
+
+### 条图（bar）
+
 bar()在对分类数据作条形图时，须先对原始数据分组，否则作出的不是分类数据的条形图。
 
-```{python}
+```{python bar}
 X=['A','B','C','D','E','F','G']
 Y=[1,4,7,3,2,5,6]
-plt.bar(X,Y); # 条图
+plt.bar(X,Y) # 条图
+plt.savefig("abc", format="pdf")
 ```
 
-   2.饼图（pie）
+### 饼图（pie）
+
 使用命令pie(),注意：和条形图一样，对原始数据作饼图前要先分组。
 
 ```{python}
-plt.pie(Y,labels=X);  # 饼图
+plt.pie(Y,labels=X)  # 饼图
+plt.show()
 ```
 
-2. 计量数据的基本统计图
+## 定量数据的基本统计图
    
-   1.线图（plot）
+### 线图（plot）
    
 ```{python}
-plt.plot(X,Y);  #线图 plot
+plt.plot(X,Y)  #线图 plot
 ```
 
-   2.直方图（hist）
+### 直方图（hist）
 
 ```{python}
 plt.hist(BSdata.身高)  # 频数直方图
@@ -274,29 +287,29 @@ plt.hist(BSdata.身高,density=True) # 频率直方图
 
 matplotlib里用来作直方图的函数是hist()也可以用频率作直方图，只要把density参数设置为True就可以了，默认为False。
    
-   3.散点图（scatter）
+### 散点图（scatter）
 
 ```{python}
 plt.scatter(BSdata.身高, BSdata.体重);  # 散点图
 ```
 
-这些图是python默认的形式，比较原始。我们可以通过设置不同的图形参数对图形进行调整和优化。
+## 图形参数设置
 
-3. 图形参数设置
+### 简介
 
-python中的每个绘图函数，都有许多参数设置选项，大多数函数的部分选项是一样的，下面列出一些主要的共同选项及其默认值。
-   1. 标题、标签、标尺及颜色。
-在使用matplotlib模块画坐标图时，往往需要对坐标轴设置很多参数，这些参数包括横纵坐标轴范围、坐标轴刻度大小、坐标轴名称等。
+- 我们可以通过设置不同的图形参数对图形进行调整和优化。
+- python中的每个绘图函数，都有许多参数设置选项，大多数函数的部分选项是一样的，下
+  面给出一些主要的共同选项及其默认值。
 
-在matplotlib中包含了很多函数，用来对这些参数进行设置。
+### 标题、标签、标尺及颜色
 
-plt.xlim、plt.ylim：设置横、纵坐标轴范围；
-
-plt.xlabel、plt.ylabel：设置坐标轴名称；
-
-plt.xticks、plt.yticks：设置坐标轴刻度；
-
-colors：控制图形的颜色，'red':设置为红色。
+1. 在使用matplotlib模块画坐标图时，往往需要对坐标轴设置很多参数，这些参数包括横
+   纵坐标轴范围、坐标轴刻度大小、坐标轴名称等。
+2. 在matplotlib中包含了很多函数，用来对这些参数进行设置。
+   1. plt.xlim、plt.ylim：设置横、纵坐标轴范围；
+   2. plt.xlabel、plt.ylabel：设置坐标轴名称；
+   3. plt.xticks、plt.yticks：设置坐标轴刻度；
+   4. colors：控制图形的颜色，'red':设置为红色。
     
 ```{python}
 plt.ylim(0,8);
@@ -304,64 +317,85 @@ plt.xlabel('names');plt.ylabel('values');
 plt.xticks(range(len(X)), X)
 ```
 
-    2. 线型和符号。
-linestyle：控制连线的线型（-：实线，--：虚线，.：点线）；
-marker：控制符号的类型，例如，‘o’绘制实心圆点图。
-    
-```{python}
+### 线型和符号
+
+1. linestyle：控制连线的线型（-：实线，--：虚线，.：点线）；
+2. marker：控制符号的类型，例如，‘o’绘制实心圆点图。
+
+```{python, out.height="0.45\\textwidth",fig.height=4}
 plt.plot(X,Y,linestyle='--',marker='o')
 ```
 
-    3. 绘图函数附加图形。
-使用高级绘图函数可以画出一幅新图，而低级绘图函数只能作用于已有的图形之上。
+## 低级绘图命令
 
-垂线：在纵坐标y处画垂直线（plt.axvline）；
-水平线：在横坐标x处画水平线（plt.axhline）。
+### 简介
+
+1. 使用高级绘图函数可以画出一幅新图，而低级绘图函数只能作用于已有的图形之上。
+2. 垂线：在纵坐标y处画垂直线（plt.axvline）；
+3. 水平线：在横坐标x处画水平线（plt.axhline）。
     
 ```{python}
-plt.plot(X,Y,'o--'); plt.axvline(x=1);plt.axhline(y=4)
+plt.plot(X,Y,'o--')
+plt.axvline(x=1)
+plt.axhline(y=4)
 ```
 
-    4. 文字函数：text（x,y,labels,…）,在（x,y）处添加用labels指定的文字。
+### 添加文字
+
+text（x,y,labels,…）,在（x,y）处添加用labels指定的文字。
     
 ```{python}
-plt.plot(X,Y);plt.text(2,7,'peakpoint')
+plt.plot(X,Y);
+plt.text(2,7,'peakpoint')
 ```
   
-    5. 图例：绘制图形后，可使用legend函数给图形加图例，见下面的分析。
+### 图例
+
+绘制图形后，可使用legend函数给图形加图例。
 
 ```{python}
 plt.plot(X,Y,label=u'折线')
+plt.legend()
 ```
 
-4. 误差条图
+### 误差条图
 
 ```{python}
 s=[0.1,0.4,0.7,0.3,0.2,0.5,0.6]
 plt.bar(X,Y,yerr=s,error_kw={'capsize':5})
 ```
 
-5. 多图
-在matplotlib下，一个figure对象可以包含多个子图（Axes），可以使用subplot快速绘制，其调用形式为
+## 多图
 
-subplot（numRows，numCols,plotNum）
-图表的整个绘图区域被分成numRows行和numCols列。
+### 多图
 
-然后按照从左到右、从上到下的顺序对每个子区域进行编号，左上子区域的编号为1，plotNum参数指定创建的Axes对象所在的区域。
+1. 在matplotlib中，一个figure对象可以包含多个子图（Axes），可以使用subplot快速绘
+   制，其调用形式为
+   
+subplot（numRows, numCols, plotNum）
+
+2. 图表的整个绘图区域被分成numRows行和numCols列。
+3. 然后按照从左到右、从上到下的顺序对每个子区域进行编号，左上子区域的编号为1，plotNum参数指定创建的Axes对象所在的区域。
+
+### 多图
 
 ```{python}
 '''一行绘制两个图形'''
 plt.figure(figsize=(12,6));
-plt.subplot(121); plt.bar(X,Y);
-plt.subplot(122); plt.plot(Y)
+plt.subplot(1,2,1); plt.bar(X,Y);
+plt.subplot(1,2,2); plt.plot(Y)
 ```
+
+### 多图
 
 ```{python}
 '''一列绘制两个图形'''
 plt.figure(figsize=(7,10));
-plt.subplot(211); plt.bar(X,Y);
-plt.subplot(212); plt.plot(Y)
+plt.subplot(2,1,1); plt.bar(X,Y);
+plt.subplot(2,1,2); plt.plot(Y)
 ```
+
+### 多图
 
 ```{python}
 '''一页绘制两个图形'''
@@ -370,6 +404,8 @@ ax[0].bar(X,Y)
 ax[1].plot(X,Y)
 ```
 
+### 多图
+
 ```{python}
 '''一页绘制四个图形'''
 fig,ax=plt.subplots(2,2,figsize=(15,10))
@@ -377,11 +413,17 @@ ax[0,0].bar(X,Y); ax[0,1].pie(Y,labels=X)
 ax[1,0].plot(Y); ax[1,1].plot(Y,'.-',linewidth=3)
 ```
 
-### 基于pandas的绘图
+## 基于pandas的绘图
 
-在pandas中，数据框有行标签、列标签及分组信息等，即要制作一张完整的图表，原本需要很多行matplotlib代码，现在只需一两条简洁的语句即可。pandas有许多能够利用DataFrame对象数据组织特点来创建标准图标的高级绘图方法（这些函数的数量还在不断增加）。
+### 简介
 
-对于数据框DataFrame绘图，其每列都为一个绘图图线，会将每列作为一个图线绘制到一张图片当中，并用不同的线条颜色及不同的图例标签来表示。其基本格式如下。
+1. 在pandas中，数据框有行标签、列标签及分组信息等，即要制作一张完整的图表，原本
+   需要很多行matplotlib代码，现在只需一两条简洁的语句即可。
+2. pandas有许多能够利用DataFrame对象数据组织特点来创建标准图标的高级绘图方法。
+3. 对于数据框DataFrame绘图，其每列都为一个绘图图线，会将每列作为一个图线绘制到一
+   张图片当中，并用不同的线条颜色及不同的图例标签来表示。
+
+### 基本格式
 
 ```
 DataFrame.plot(kind='line')
@@ -397,7 +439,7 @@ kind:#图类型
 'scatter':(default)#散点图
 ```
 
-1. 计量数据
+### 定量数据
 
 ```{python}
 BSdata['体重'].plot(kind='line');
@@ -421,7 +463,7 @@ BSdata[['身高','体重','支出']].plot(subplots=True,layout=(1,3),kind='densi
 BSdata[['身高','体重','支出']].plot(subplots=True,layout=(3,1),kind='density')
 ```
 
-2. 计数数据
+### 定性数据
 
 ```{python}
 T1=BSdata['开设'].value_counts();T1
@@ -433,13 +475,11 @@ T1.plot(kind='bar'); #T1.sort_values().plot(kind='bar');
 T1.plot(kind='pie')
 ```
 
-## 数据的分类分析
-
-# 数据的分类分析
+# 数据的分组分析
 
 ## 一维频数分析
 
-### 计数数据频数分布
+### 定性数据频数分布
 
 1. pivot-table
 
@@ -448,9 +488,11 @@ BSdata['开设'].value_counts()
 #BSdata.pivot_table(values='学号',index='开设',aggfunc=len)
 ```
 
+### 定性数据频数分布
+
 2. 自定义计数汇总函数
 
-由于python自带的value-counts()函数只能统计计数数据的个数，无法计算其频率，于是
+由于python自带的value_counts()函数只能统计定性数据的个数，无法计算其频率，于是
 我们自定义一个函数tab()来进行统计和绘图。
 
 ```{python}
@@ -468,10 +510,11 @@ def tab(x,plot=False): #计数频数表
      ax[1].pie(p,labels=p.index,autopct='%1.2f%%');  # 饼图
    return(round(Tab,3))
 
+
 tab(BSdata.开设,True)
 ```
 
-#### 计量数据频数分布
+### 定量数据频数分布
 1. 身高频数表与条图
 
 ```{python}
@@ -482,7 +525,7 @@ pd.cut(BSdata.身高,bins=10).value_counts()
 pd.cut(BSdata.身高,bins=10).value_counts().plot(kind='bar')
 ```
 
-大家可试做bins=[150,160,170,180,190,200]的分组表和条图。
+### 定量数据频数分布
 
 2. 支出频数表
 
@@ -494,7 +537,10 @@ pd.cut(BSdata.支出,bins=[0,10,30,100]).value_counts()
 pd.cut(BSdata.支出,bins=[0,10,30,100]).value_counts().plot(kind='bar')
 ```
 
-3. 自定义计量频率分析函数
+### 定量数据频数分布
+
+1. 自定义计量频率分析函数
+
 由于python自带的hist函数不是以频数表的形式显示的，于是自定义一个函数freq来进行统计和绘图。
 
 ```{python}
@@ -512,22 +558,30 @@ def freq(X,bins=10): #计量频数表与直方图
 freq(BSdata.体重)
 ```
 
-### 二维集聚分析
-#### 计数数据的列联表
-1.二维列联表
+## 二维集聚分析
+
+### 定性数据的列联表
+
+1. 二维列联表
 python的crosstab()函数可以把双变量分类数据整理成二维表形式。
 
 ```{python}
 pd.crosstab(BSdata.开设,BSdata.课程)
 ```
 
-行和列的合计可使用参数margins=True。
+2. 行和列的合计可使用参数margins=True。
 
 ```{python}
 pd.crosstab(BSdata.开设,BSdata.课程,margins=True)
 ```
 
-对于二维表，我们经常要计算某个数据占行、列的比例或占总和的比例，也就是边缘概率。python可以很简单地计算这些比例，使用normalize参数，normalize=‘index’表示各数据占行的比例；normalize=‘columns’表示各数据占列的比例；normalize=‘all’，表示各数据占总和的构成比例。例如：
+### 定性数据的列联表
+
+1. 对于二维表，我们经常要计算某个数据占行、列的比例或占总和的比例，也就是边缘概
+   率。
+2. python可以很简单地计算这些比例，使用normalize参数，normalize=‘index’表示各
+   数据占行的比例；normalize=‘columns’表示各数据占列的比例；normalize=‘all’，
+   表示各数据占总和的构成比例。例如：
 
 ```{python}
 pd.crosstab(BSdata.开设,BSdata.课程,margins=True,normalize='index')
@@ -541,34 +595,48 @@ pd.crosstab(BSdata.开设,BSdata.课程,margins=True,normalize='columns')
 pd.crosstab(BSdata.开设,BSdata.课程,margins=True,normalize='all').round(3)
 ```
 
-2. 复式条图
+### 复式条图
 
 ```{python}
 T2=pd.crosstab(BSdata.开设,BSdata.课程);T2
 T2.plot(kind='bar');
 ```
 
-条图用等宽直条的长短来表示相互独立的各指标数值大小，该指标可以是连续性变量的某汇总指标，也可以是分类变量的频数或构成比。各组直条间的间距应相等，，其宽度一般与直条的宽度相等或为直条宽度的一半。python作条形图的函数是bar(),不过在作条形图前须对数据进行分组。我们继续以前面的分类数据为例作条形图，粗略分析变量的分布情况。
+### 复式条图
+
+1. 条图用等宽直条的长短来表示相互独立的各指标数值大小，该指标可以是连续性变量的
+   某汇总指标，也可以是分类变量的频数或构成比。
+2. 各组直条间的间距应相等，其宽度一般与直条的宽度相等或为直条宽度的一半。
+3. python作条形图的函数是bar(),不过在作条形图前须对数据进行分组。
+4. 我们继续以前面的分类数据为例作条形图，粗略分析变量的分布情况。
+
+### 复式条图
+
+5. stacked参数设置为False时，作出的是分段式条形图；为True时，作出的是并列式条形图，默认为False。
 
 ```{python}
 T2.plot(kind='bar',stacked=True);
 ```
 
-其中，stacked参数设置为False时，作出的是分段式条形图；为True时，作出的是并列式条形图，默认为False。
+### 定量数据的集聚表
 
-### 计量数据的集聚表
+1. pandas提供灵活高效的groupby功能，使得用户能以一种自然的方式对数据集进行切片、
+   切块、摘要等操作；
+2. 根据一个或多个键（可以是函数、数组或DataFrame列名）拆分pandas对象；
+3. 计算分组摘要统计，如计数、平均值、标准差，以及用户自定义函数；
+4. 对DataFrame的列应用各种各样的函数。
 
-pandas提供灵活高效的groupby功能，使得用户能以一种自然的方式对数据集进行切片、切块、摘要等操作；根据一个或多个键（可以是函数、数组或DataFrame列名）拆分pandas对象；计算分组摘要统计，如计数、平均值、标准差，以及用户自定义函数；对DataFrame的列应用各种各样的函数。
+### 按列分组
 
-1. 按列分组
-注意：以下使用groupby()函数生成的是一个中间分组变量，为GroupBy类型.
+1. 注意：以下使用groupby()函数生成的是一个中间分组变量，为GroupBy类型.
 
 ```{python}
 BSdata.groupby(['性别'])
 type(BSdata.groupby(['性别']))
 ```
 
-2. 按分组统计
+### 按分组统计
+
 在分组结果的基础上应用size()/sum()/count()等统计函数，可分别统计分组数量、不同列的分组和、不同列的分组数量。
 
 ```{python}
@@ -583,16 +651,18 @@ BSdata.groupby(['性别'])['身高'].size()
 BSdata.groupby(['性别','开设'])['身高'].mean()
 ```
 
-3. 应用agg()
-对于分组的某一列或多列，应用agg（func）可以对分组后的数据应用func函数，也可以推广到同时作用于多个列和使用多个函数上。
+### 应用agg()函数
+
+1. 对于分组的某一列或多列，应用agg（func）可以对分组后的数据应用func函数，
+2. 也可以推广到同时作用于多个列和使用多个函数上。
 
 ```{python}
 BSdata.groupby(['性别'])['身高'].agg([np.mean, np.std])
 ```
 
-4. 应用apply()
-apply()不同于agg()
-的地方在于：前者应用于dataFrame的各个列，后者仅作用于指定的列。
+### 应用apply()函数
+
+1. apply()不同于agg()的地方在于：前者应用于dataFrame的各个列，后者仅作用于指定的列。
 
 ```{python}
 BSdata.groupby(['性别'])['身高','体重'].apply(np.mean)
@@ -602,10 +672,13 @@ BSdata.groupby(['性别'])['身高','体重'].apply(np.mean)
 BSdata.groupby(['性别','开设'])['身高','体重'].apply(np.mean)
 ```
 
-### 多维透视分析
-#### 计数数据透视分析
-1. pivot-table
-对计数数据，前面介绍了value-counts()函数生成一维表，用crosstab()函数生成二维表，其实pivot-table()函数可以生成任意维统计表。使用pandas中pivot-table命令的各种列联表，可以实现Excel等电子表格的透视表功能，且更为灵活。
+## 多维透视分析
+
+### 定性数据透视分析：pivot-table
+
+1. 对定性数据，前面介绍了value_counts()函数生成一维表，用crosstab()函数生成二维
+   表，其实pivot_table()函数可以生成任意维统计表。
+2. 使用pandas中pivot_table命令的各种列联表，可以实现Excel等电子表格的透视表功能，且更为灵活。
 
 ```{python}
 BSdata.pivot_table(index=['性别'],values=['学号'],aggfunc=len)
@@ -619,7 +692,7 @@ BSdata.pivot_table(values=['学号'],index=['性别','开设'],aggfunc=len)
 BSdata.pivot_table(values=['学号'],index=['开设'],columns=['性别'],aggfunc=len)
 ```
 
-#### 计量数据透视分析
+### 定量数据透视分析
 
 ```{python}
 BSdata.pivot_table(index=['性别'],values=["身高"],aggfunc=np.mean)
@@ -633,7 +706,7 @@ BSdata.pivot_table(index=['性别'],values=["身高"],aggfunc=[np.mean,np.std])
 BSdata.pivot_table(index=["性别"],values=["身高","体重"])
 ```
 
-#### 复合数据透视分析
+### 复合数据透视分析
 
 ```{python}
 BSdata.pivot_table('学号', ['性别','开设'], '课程', aggfunc=len, margins=True, margins_name='合计')
