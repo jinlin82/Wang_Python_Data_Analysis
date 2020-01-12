@@ -1,12 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-plt.close()
-
 import pandas as pd
 
-BSdata = pd.read_csv('./data/BSdata.csv')
+BSdata = pd.read_csv('../data/BSdata.csv')
 
 BSdata.describe()
+
 
 BSdata[['性别','开设','课程','软件']].describe()
 
