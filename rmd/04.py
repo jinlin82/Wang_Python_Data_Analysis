@@ -6,7 +6,7 @@ BSdata = pd.read_csv('../data/BSdata.csv')
 
 BSdata.describe()
 
-
+### DONE 修改代码
 BSdata[['性别','开设','课程','软件']].describe()
 
 

@@ -75,6 +75,7 @@ Sys.setlocale("LC_ALL", "Chinese")
 
 # 随机变量及其分布 
 ## 均匀分布
+
 ```{python}
 import matplotlib.pyplot as plt
 a=0;b=1;y=1/(b-a)
@@ -305,6 +306,7 @@ st.ttest_1samp(BSdata.身高, popmean = 170)
 ```
 
 单样本t检验函数进行均值的t检验
+
 ```{python}
 def ttest_1plot(X,mu=0): # 单样本均值t检验图
     k=0.1
@@ -322,6 +324,7 @@ def ttest_1plot(X,mu=0): # 单样本均值t检验图
     plt.vlines(st.t.ppf(0.05/2,df),0,0.2,colors='b');
     plt.vlines(-st.t.ppf(0.05/2,df),0,0.2,colors='b');
     plt.text(-0.5,0.2,r"$\alpha$=%3.2f"%0.05,fontsize=15);
+
 ttest_1plot(BSdata.身高,166)
 ttest_1plot(BSdata.身高,170)
 ```

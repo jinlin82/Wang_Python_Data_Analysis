@@ -76,7 +76,7 @@ Sys.setlocale("LC_ALL", "Chinese")
 ```
 
 
-# Python 数据类型
+# TODO Python 数据类型
 
 ## Python 数据类型
 ### python对象
@@ -86,7 +86,7 @@ Sys.setlocale("LC_ALL", "Chinese")
 3. 在python里，对象是通过名字创建和保存的。
 4. 可以用who命令来查看当前打开的python环境里的对象，用del删除这些对象。
 
-### 对象操作
+### FIXME 对象操作
 
 1. 查看数据对象
 2. 生成数据对象
