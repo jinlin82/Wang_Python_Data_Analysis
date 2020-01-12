@@ -1,0 +1,327 @@
+---
+title: "数据的统计分析"
+author: "金林"
+date: "2020-01"
+output:
+  bookdown::html_document2:
+    fig_caption: true
+    highlight: haddock
+    keep_md: true
+    md_extensions: +east_asian_line_breaks
+    number_sections: true
+    pandoc_args:
+    - --filter
+    - pandoc-crossref
+    - -M
+    - eqnPrefix=
+    seq_numbering: false
+    toc: true
+  beamer_presentation:
+    keep_tex: true
+    latex_engine: xelatex
+    toc: true
+    pandoc_args:
+    - --listing
+    - --filter
+    - pandoc-crossref
+    slide_level: 3
+    template: ./style/beamer-template.tex
+  bookdown::pdf_document2:
+    keep_tex: true
+    latex_engine: xelatex
+    md_extensions: +east_asian_line_breaks
+    pandoc_args:
+    - --listing
+    - --filter
+    - pandoc-crossref
+    toc: false
+  bookdown::word_document2:
+    fig_caption: true
+    md_extensions: +east_asian_line_breaks
+    pandoc_args:
+    - --filter
+    - pandoc-crossref
+    reference_docx: ./style/word-styles-02.docx
+  ioslides_presentation:
+    highlight: haddock
+    slide_level: 3
+css: ./style/markdown.css
+csl: ./style/chinese-gb7714-2005-numeric.csl
+bibliography: Bibfile.bib
+eqnPrefixTemplate: ($$i$$)
+institute: "中南财经政法大学统计与数学学院"
+link-citations: true
+linkReferences: true
+chapters: true
+tableEqns: false
+autoEqnLabels: false
+---
+
+
+```{r setup, echo=F, purl=F}
+knitr::opts_knit$set(root.dir = getwd())
+knitr::opts_chunk$set(echo = T, results = 'hide')
+knitr::opts_chunk$set(warning = FALSE, message=FALSE)
+```
+
+```{r prepare, echo=F, purl=F}
+rm(list=ls())
+options(digits=4)
+options(scipen=100)
+graphics.off()
+Sys.setlocale("LC_ALL", "Chinese")
+```
+
+
+# 随机变量及其分布 
+## 均匀分布
+```{python}
+import matplotlib.pyplot as plt
+a=0;b=1;y=1/(b-a)
+plt.plot(a,y); plt.hlines(y,a,b);
+#plt.vlines(0,0,1);plt.vlines(1,0,1);
+```
+
+均匀分布是随机抽样和随机模拟的基础,有两个函数可产生均匀随机数。
+
+1. 整数随机数
+```{python}
+import random
+random.randint(10,20)  #[10,20]上的一个随机整数
+```
+2. 实数随机数
+```{python}
+random.uniform(0,1)    #[0,1]上的随机实数
+```
+3. 整数随机数列
+```{python}
+import numpy as np
+np.random.randint(10,21,9)  #[10,20]上的随机整数
+```
+4. 实数随机数列
+```{python}
+np.random.uniform(0,1,10)   #[0,1]上的10个随机实数
+np.random.rand(10)
+```
+
+## 正态分布
+### 标准正态分布
+1. 标准正态分布曲线
+```{python}
+from math import sqrt,pi   #调用数学函数，import math as *,可直接使用函数
+x=np.linspace(-4,4,50);
+y=1/sqrt(2*pi)*np.exp(-x**2/2);
+plt.plot(x,y);
+```
+
+2. 标准正态分位数 
+   
+标准正态分布的$\alpha$分位数是这样一个数,其左侧图形面积恰好为$\alpha$, 
+其右侧图形面积恰好为$1-\alpha$
+```{python}
+import scipy.stats as st  #加载统计方法包
+P=st.norm.cdf(2);P
+```
+ 
+3. 标准正态曲线下的面积(概率)
+```{python}
+def norm_p(a=-2,b=2): ### 正态曲线面积图
+    x=np.arange(-4,4,0.1)
+    y=st.norm.pdf(x)
+    x1=x[(a<=x) & (x<=b)];x1
+    y1=y[(a<=x) & (x<=b)];y1
+    p=st.norm.cdf(b)-st.norm.cdf(a);p
+    #plt.title("N(0,1)分布: [%6.3f %6.3f] p=%6.4f"%(a,b,p))
+    plt.plot(x,y);
+    plt.hlines(0,-4,4);
+    plt.vlines(x1,0,y1,colors='r');
+    plt.text(-0.5,0.2,"%5.2f％" % (p*100.0),fontsize=15);
+norm_p(-1,1)         #68.27%
+norm_p(-2,2)         #94.45%
+norm_p(-1.96,1.96)   #95%
+norm_p(-3,3)         #99.73%
+norm_p(-2.58,2.58)   #99%
+za=st.norm.ppf(0.95);za   #单侧分位数值
+[st.norm.ppf(0.025),st.norm.ppf(0.975)]  #双侧
+```
+
+### 正态分布随机数
+1. 标准正态随机数
+```{python}
+np.random.normal(10,4,5)  #产生5个均值为10标准差为4的正态随机数
+np.random.normal(0,1,5)   #生成5个标准正态分布随机数
+```
+
+随机产生1000个标准正态分布随机数，作其概率直方图，然后再添加正态分布的密度函数线。
+```{python}
+z=np.random.normal(0,1,100)
+import seaborn as sns
+sns.distplot(z)
+```
+```{python}
+#一页绘制四个正态随机图
+fig,ax = plt.subplots(2,2)
+for i in range(2):
+    for j in range(2):
+        ax[i,j].hist(np.random.normal(0,1,500),bins = 50)
+plt.subplots_adjust(wspace = 0,hspace=0)
+```
+
+2. 一般正态随机数
+```{python}
+np.random.normal(10,4,5)  #产生5个均值为10标准差为4的正态随机数
+```
+
+### 正态概率图检验 
+
+1. 正态概率图展示的是样本的累积频率分布与理论正态分布的累积概率分布之间的关系，
+它是以标准正态分布的分位数为横坐标、样本有序值为纵坐标的散点图。
+2. 利用正态概率图鉴别样本数据是否近似千正态分布，只须看概率图上的点是否近似
+地在一条直线附近，而且该直线的斜率为标准差，截距为均值。用正态概率图还可获
+得样本偏度和峰度的粗略信息。如果图中各 点排列为直线或接近直线，则样本的
+正态分布假设可以接受。
+
+```{python}
+import pandas as pd
+BSdata = pd.read_csv('../data/BSdata.csv',encoding="utf-8")
+st.probplot(BSdata.身高, dist="norm", plot=plt); #正态概率图
+st.probplot(BSdata['支出'], dist="norm", plot=plt);
+```
+
+从上面的正态概率图可以看出,支出的概率图严重偏离正态线,明显不是正态分布,而
+身高的概率图基本在正态线上,可认为身高近似服从正态分布。
+
+# 数据分析统计基础 
+## 统计量
+1. 简单随机抽样
+```{python}
+np.random.randint(0,2,10)  #[0,2)上的10个随机整数
+```
+
+2. 随机抽取样本号
+```{python}
+i=np.random.randint(1,53,6);i #抽取10个学生，[1,52]上的6个整数
+BSdata.iloc[i]       #随机抽取的6个学生信息
+BSdata.sample(6)    #直接抽取6个学生的信息
+```
+## 统计量的分布
+### 中心极限定理 
+
+1. 正态均值的分布—正态分布
+```{python}
+def norm_sim1(N=1000,n=10):    # n样本个数, N模拟次数（即抽样次数）
+    xbar=np.zeros(N)            #模拟样本均值
+    for i in range(N):          #[0,1]上的标准正态随机数及均值
+       xbar[i]=np.random.normal(0,1,n).mean()
+    sns.distplot(xbar,bins=50)  #plt.hist(xbar,bins=50)
+    print(pd.DataFrame(xbar).describe().T)
+norm_sim1()
+norm_sim1(10000,30)
+```
+2. 非正态均值统计量的分布一渐近正态分布 
+3. 渐进正态分布模拟
+```{python}
+def norm_sim2(N=1000,n=10):
+    xbar=np.zeros(N)
+    for i in range(N):
+       xbar[i]=np.random.uniform(0,1,n).mean()  #[0,1]上的均匀随机数及均值
+    sns.distplot(xbar,bins=50)
+    print(pd.DataFrame(xbar).describe().T)
+norm_sim2()
+norm_sim2(10000,30)
+```
+
+### 均值的t分布
+  
+1. 小样本正态均值$\overline{X}$的标准化统计量分布t分布
+$$\frac{(\bar{X}-\mu)}{s/\sqrt{n}} \sim t(n-1)$$
+2. t分布曲线
+```{python}
+x=np.arange(-4,4,0.1)
+yn=st.norm.pdf(x,0,1);yt3=st.t.pdf(x,3);yt10=st.t.pdf(x,10)
+plt.plot(x,yn,'r-',x,yt3,'b.',x,yt10,'g-.');
+plt.legend(["N(0,1)","t(3)","t(10)"]);
+```
+t分布是对称分布，其偏度系数为0。n越小 ， 其峰度系数越大；n越大，其峰度系数越小，
+越接近标准正态分布。 
+
+# 基本统计推断方法 
+## 参数估计方法
+### 点估计
+根据样本统计量估计总体参数
+```{python}
+BSdata['身高'].mean() #均值的点估计
+BSdata['身高'].std() #标准差的点估计 
+```
+
+### 区间估计 
+通过统计推断找到包括样本统计量在内（有时以统计量为中心）的一个区间，该区间被认为很可能包含总体参数。
+
+如正态分布$z=\frac{\bar{x}-\mu}{\sigma/ \sqrt{n}} \sim N(0,1)$的置信区间：
+$$[\bar{x}-z_{1-\alpha/ 2} \frac{\sigma}{\sqrt{n}}, \bar{x}+z_{1+\alpha/2} \frac{\sigma}{\sqrt{n}}]$$
+
+```{python}
+norm_p(-2,2)
+```
+
+```{python}
+#基于原始数据的t分布均值的置信区间
+def t_interval(b,x):
+    a=1-b
+    n = len(x)
+    import scipy.stats as st
+    ta=st.t.ppf(1-a/2,n-1);ta
+    from math import sqrt
+    se=x.std()/sqrt(n)
+    return(x.mean()-ta*se, x.mean()+se*ta)
+t_interval(0.95,BSdata['身高'])#95%的置信区间
+```
+
+## 参数的假设检验 
+### 假设检验的概念 
+ 假设检验是用来判断样本与样本、样本与总体的差异由抽样误差引起还是由本质差别所造
+ 成的统计推断方法，其基本思想是小概率反证法思想。小概率思想是指小概率事件 ($P<0.01或P<0.05$)在一次试验中基本不会发生。反证法思想是先提出假设（检验假
+ 设$H_0$),再用适当的统计方法确定假设成立的可能性大小,若可能性小,则认为假设
+ 不成立；若可能性大,则还不能认为假设不成立。
+
+ 假设检验的步骤：
+
+1.建立原假设和备择假设
+
+2.构建检验统计量, 确定拒绝域的形式
+
+3.给出显著性水平$\alpha$
+
+4.给出临界值,确定拒绝域
+
+5.根据样本观察值计算检验统计量,根据统计量是否落在拒绝域进行判断。
+
+### 样本均值t检验 
+样本均值正态检验
+```{python}
+import scipy.stats as st  #加载统计方法包
+st.ttest_1samp(BSdata.身高, popmean = 166)
+st.ttest_1samp(BSdata.身高, popmean = 170)
+```
+
+单样本t检验函数进行均值的t检验
+```{python}
+def ttest_1plot(X,mu=0): # 单样本均值t检验图
+    k=0.1
+    df=len(X)-1
+    t1p=st.ttest_1samp(X, popmean = mu);
+    x=np.arange(-4,4,k); y=st.t.pdf(x,df)
+    t=abs(t1p[0]);p=t1p[1]
+    x1=x[x<=-t]; y1=y[x<=-t];
+    x2=x[x>=t]; y2=y[x>=t];
+    print("  单样本t检验\t t=%6.3f p=%6.4f"%(t,p))
+    print("  t置信区间: ",st.t.interval(0.95,len(X)-1,X.mean(),X.std()))
+    plt.plot(x,y); plt.hlines(0,-4,4);
+    plt.vlines(x1,0,y1,colors='r'); plt.vlines(x2,0,y2,colors='r');
+    plt.text(-0.5,0.05,"p=%6.4f" % t1p[1],fontsize=15);
+    plt.vlines(st.t.ppf(0.05/2,df),0,0.2,colors='b');
+    plt.vlines(-st.t.ppf(0.05/2,df),0,0.2,colors='b');
+    plt.text(-0.5,0.2,r"$\alpha$=%3.2f"%0.05,fontsize=15);
+ttest_1plot(BSdata.身高,166)
+ttest_1plot(BSdata.身高,170)
+```
