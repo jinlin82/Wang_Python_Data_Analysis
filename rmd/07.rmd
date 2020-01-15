@@ -141,7 +141,7 @@ yfit=fm1.fittedvalues;
 plt.plot(x, y,'.',x,yfit, 'r-');
 ```
  
- ## 简单线性模型检验
+## 简单线性模型检验
 检验回归系数和总体方程是否显著
 
 ```{python}
@@ -149,6 +149,7 @@ fm1.tvalues                            #系数t检验值
 fm1.pvalues                            #系数t检验概率
 pd.DataFrame({'b估计值':fm1.params,'t值':fm1.tvalues,'概率p':fm1.pvalues})
 ```
+
 ```{python}
 import statsmodels.formula.api as smf  #根据公式建回归模型
 fm2=smf.ols('体重~身高', BSdata).fit()
@@ -178,6 +179,7 @@ st.pearsonr(BS_M.身高,BS_M.体重) #相关系数和P值
 import seaborn as sns
 sns.jointplot('身高','体重',BS_M) #散点图
 ```
+
 ```{python}
 #女生身高与体重的相关分析 
 #plt.plot(BS_F.身高, BS_F.体重,'o')
@@ -191,6 +193,7 @@ sns.jointplot('身高','体重',BS_F)
 smf.ols('体重~身高',BS_M).fit().summary2().tables[1] 
 sns.jointplot('身高','体重',BS_M,kind='reg') #回归相关图
 ```
+
 ```{python}
 #女生身高与体重的回归分析
 smf.ols('体重~身高',BS_F).fit().summary2().tables[1]
