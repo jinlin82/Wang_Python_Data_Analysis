@@ -1,0 +1,421 @@
+---
+title: "数据的预测分析"
+author: "金林"
+date: "2020-01"
+output:
+  bookdown::html_document2:
+    fig_caption: true
+    highlight: haddock
+    keep_md: true
+    md_extensions: +east_asian_line_breaks
+    number_sections: true
+    pandoc_args:
+    - --filter
+    - pandoc-crossref
+    - -M
+    - eqnPrefix=
+    seq_numbering: false
+    toc: true
+  beamer_presentation:
+    keep_tex: true
+    latex_engine: xelatex
+    toc: true
+    pandoc_args:
+    - --listing
+    - --filter
+    - pandoc-crossref
+    slide_level: 3
+    template: ./style/beamer-template.tex
+  bookdown::pdf_document2:
+    keep_tex: true
+    latex_engine: xelatex
+    md_extensions: +east_asian_line_breaks
+    pandoc_args:
+    - --listing
+    - --filter
+    - pandoc-crossref
+    toc: false
+  bookdown::word_document2:
+    fig_caption: true
+    md_extensions: +east_asian_line_breaks
+    pandoc_args:
+    - --filter
+    - pandoc-crossref
+    reference_docx: ./style/word-styles-02.docx
+  ioslides_presentation:
+    highlight: haddock
+    slide_level: 3
+css: ./style/markdown.css
+csl: ./style/chinese-gb7714-2005-numeric.csl
+bibliography: Bibfile.bib
+eqnPrefixTemplate: ($$i$$)
+institute: "中南财经政法大学统计与数学学院"
+link-citations: true
+linkReferences: true
+chapters: true
+tableEqns: false
+autoEqnLabels: false
+---
+
+
+```{r setup, echo=F, purl=F}
+knitr::opts_knit$set(root.dir = getwd())
+knitr::opts_chunk$set(echo = T, results = 'hide')
+knitr::opts_chunk$set(warning = FALSE, message=FALSE)
+```
+
+```{r prepare, echo=F, purl=F}
+rm(list=ls())
+options(digits=4)
+options(scipen=100)
+graphics.off()
+Sys.setlocale("LC_ALL", "Chinese")
+```
+
+# 动态数列的基本分析 (时间序列)
+## 动态数列的介绍 
+### 定义
+动态数列指将同一统计指标的数值按其发生的时间先后顺序排列而成的数列。动态数列分析的
+主要目的是根据已有的历史数列对未来进行预测。
+
+### 动态数列的构建 
+```{python}
+import pandas as pd
+QTdata=pd.read_excel('../data/DaPy_data.xlsx','QTdata',index_col=0);QTdata.head(8) #获取数据
+import matplotlib.pyplot as plt
+QTdata.plot() #季度时序图
+
+```
+
+
+```{python}
+QTdata['Year']=QTdata.index.str[:4];QTdata
+YGDP=QTdata.groupby(['Year'])['GDP'].sum();YGDP#年度数据
+YGDP.plot();  #年度时序图
+```
+
+## 动态数列的分析 
+**同比发展速度**：本期发展水平与上年同期发展水平对比 ，达到的相对发展速度。
+
+**环比发展速度**：报告期水平与前一时期水平之比 ，表明现象 逐期的发展速度。
+
+一般来说 ，环比可以与环比相比较，而不能拿同比与环比相比较；而对于同一个地方，考虑时间
+纵向上发展趋势的反映，则往往要把同比与环比放在一起进行对照。 
+
+**定基比发展速度**:简称总速度 ，一般指报告期水平与某一固定时期水平之比 ，表明这种现象
+在较长时期内总的发展速度。 
+
+### 绝对动态数列 
+把一系列同类的总量指标按时间先后顺序排列而形成的动态数列，称为绝对数动态数列或绝对增
+长量，说明事物在一定时期所增加的绝对数量，可分别计算累计增长量和逐期增长量。 
+
+1. 定基增长量
+报告期指标与某一固定期（基期水平）指标之差 ，也称累计增长量（简称定基数）。 
+$$定基数=a_i-a_1$$
+```{python}
+YGDPds=pd.DataFrame(YGDP);YGDPds  #构建年度动态序列框
+YGDPds['定基数']=YGDP-YGDP[:1].values;YGDPds
+```
+2. 环比增长量
+报告期的指标与前一期指标之差，也称逐期增长量（简称环比数） 
+   $$环比数=a_i-a_{i-1}$$
+```{python}
+YGDPds['环基数']=YGDP-YGDP.shift(1);YGDPds  #shift(1)向下移动1个单位
+```
+3. 同比增长量（同比数）
+对于季度或月度数据，不仅要计算它们的环比，还要计算它们的同比（不同年份相同季度或月度
+的数据之比）。 
+$$同比数=a_i-a_{i-k}   (k=4,12)$$
+```{python}
+QGDP=QTdata.GDP
+QGDPds=pd.DataFrame({'GDP':QGDP});QGDPds
+QGDPds['同比数']=QGDP-QGDP.shift(4); QGDPds
+```
+
+### 相对动态数列
+把一系列同类的相对指标数值按时间先后顺序排列而形成的动态数列，称为相对数动态数列。它
+可以用来说明社会现象间的相对变化情况。
+
+1. 定基发展速度（定基比） 
+$$定基比=a_i/a_{i-1}$$
+```{python}
+YGDPds['定基比']=YGDP/YGDP[:1].values;YGDPds
+```
+2. 环比发展速度（环基比）
+
+$$环基比=(a_i/a_{i-1}-1)*100$$
+
+```{python}
+YGDPds['环基比']=(YGDP/YGDP.shift(1)-1)*100;YGDPds
+```
+3. 同比增长速度（同基比）
+$$同基比=a_i/a_{i-k}  (k=4,12)$$
+```{python}
+QGDPds['同基比']=(QGDP/QGDP.shift(4)-1)*100;QGDPds
+```
+
+### 平均动态数列
+**平均发展速度**：用于概括某一时期的速度变化 ， 即该时期环比几何均数。
+$$\mathrm{ADR}=\sqrt[n]{\frac{a_{2}}{a_{1}} \frac{a_{3}}{a_{2}} \ldots \frac{a_{n}}{a_{n-1}}}=\sqrt[n]{\frac{a_{n}}{a_{1}}}$$
+```{python}
+ADR=(YGDP[-1:].values/YGDP[:1].values)**(1/len(YGDP));ADR
+print('\n\t平均增长量 = %5.3f' % ADR)
+```
+
+# 动态数列预测分析 
+目前常用的预测分析法有趋势模型预测法和时间序列预测法，利用Python提供的分析工具可以很
+方便地进行预测分析。
+
+## 趋势预测构建 
+时间序列没有季节因素，只有趋势，比如总体上升或总体下降。
+
+趋势预测的关键在于如何选择正确的趋势模型 ， 而所确定的形式可以是 经验的（根据实际观测
+结果的表现形式）或理论的（根据变蛋间关系的专业 知识）。 
+
+### 趋势模型的类型
+趋势模型通常有一次模型（直线）、 二次模型（抛物线）、 对数模型（ 对数曲线）、 指数模
+型（指数曲线）和幂函数模型（幂函数曲线）等。 
+
+1. 一次模型：$y=a+bx$
+```{python}
+import numpy as np
+x=np.arange(20)+1;x
+y=1+0.2*x
+plt.plot(x,1+0.2*x,'.');
+```
+
+2. 对数模型：$y=a+blogx$
+
+对数函数的特点是随着x增大 ,x的变动对因变量y的影响效果不断递减。
+```{python}
+plt.plot(x,1+0.2*np.log(x),'.');
+```
+
+3. 指数模型：$y=ae^{bx}$
+
+两边取对数得到线性模型：$log(y)=loga+bx$
+
+指数函数广泛应用于描述客观现象的变动趋势。 例如,产值、产量按一定比率增长或降低，就可以
+用这类函数近似表示。 
+```{python}
+plt.plot(x,0.2*np.exp(0.1*x),'.');
+```
+
+4. 幂函数：$y=ax^b$
+
+两边取对数得到线性模型：$log(y)=loga+blogx$
+
+这类函数的特点是 ， 方程中的参数可以直接反映因变量y对于某个自变量的弹性。 所谓y对于x的
+弹性指x变动1%时所引起的y变动的百分比。
+```{python}
+plt.plot(x,0.2*x**0.1,'.');
+```
+
+### 选择最优模型准则 
+1. 根据以上模型 ， 可分别建立各自转化后的趋势模型。 
+2. 分析各模型的F检验值 ， 看各方程是否达到显著。 
+3. 列表比较模型决定系数$R^2$值的大小，$R^2$值越大，表示经该代换后，趋势关系越密切；
+选取$R^2$值最大的模型作为最优化模型。
+
+趋势模型的基本任务是通过两个相关变量x与y实际观测数据建立趋势回归方程，揭示x与y的趋势关系。 
+
+### 趋势模型的建立 
+对2001—2015年我国国内生产总值数据进行趋势预测分析。
+
+1. 线性模型
+```{python}
+Yt=QTdata.groupby(['Year'])['GDP'].sum();Yt  #形成年度时序数据
+plt.plot(Yt,'-')  #Yt.plot(); 时序图
+import statsmodels.api as sm
+X1=np.arange(len(Yt))+1;X1     #自变量序列,建模时最好不直接用年份
+Yt_L1=sm.OLS(Yt,sm.add_constant(X1)).fit();Yt_L1.summary().tables[1]
+```
+该模型的拟合优度（决定系数）$R^2=0.969$ ,说明拟合直线模型的效果还不错 ， 模型和回归
+系数检验都有显著的统计学意义。 
+
+```{python}
+import warnings   #忽视警告信息
+warnings.filterwarnings("ignore")
+def trendmodel(y,x):  #定义两变量直线趋势回归模型，x自变量，y因变量
+    fm=sm.OLS(y,sm.add_constant(x)).fit()
+    sfm=fm.summary2()
+    print("模型检验:\n",sfm.tables[1])
+    print("决定系数：",sfm.tables[0][1][6])
+    return fm.fittedvalues
+
+L1=trendmodel(Yt,X1);
+plt.plot(Yt,'o',L1,'r-');
+```
+2. 指数曲线
+```{python}
+L2=trendmodel(np.log(Yt),X1);
+plt.plot(Yt,'o',np.exp(L2),'r-');
+```
+该模型的拟合优度（决定系数））$R^2=0.992$, 说明拟合指数曲线模型的效果很不错,模型和回
+归系数检验都有显著的统计学意义。 从前面季度数据的趋势图中可以看到 ， 由于这类数据带
+有季节因素 ， 所以采用线性或非线性模型只能预测时间序列的大概趋势，而无法精确预测。
+要更为精确地预测，须采用下面的平滑方法和模型。 
+
+## 平滑预测法 
+如果历史数据是按时间序列排列并呈周期性变化的 ，则在进行时间序列预测分析之前需要削减
+周期性变化的因素，这时应该对数据进行平滑处理。 常用的两种平滑预测法有移动平均法和指数平滑法。 
+
+如果一个时间序列既包含趋势，也包含季节因素那么单纯构建趋势模型来预测通常是不准确的，
+须构建平滑模型来进行预测。 
+
+### 移动平均预测法（MA)
+移动平均法是一种简单平滑预测技术,它的基本思想是,根据时间序列资料逐项推移,依次计算
+包含一定项数的序时平均值,以反映长期趋势。因此,当时间序列的数值受周期变动和随机波动
+的影响,起伏较大,不易显示 出事件的发展趋势时,使用移动平均法可以消除这些因素的影响,
+显示出事件的发展方向与趋势（即趋势线），然后依趋势线分析预测序列的长期趋势。
+
+移动平均法是用一组最近的实际数值来预测未来一期或几期内公司产品 的需求量、 公司产能等
+的一种常用方法。 移动平均法适用于即期预测。 当产品需求既不快速增长也不快速下降 ，
+且不存在季节性因素时 ，移动平均法能有效地消除预测中的随机波动 ，是非常有用的。 
+移动平均法共三类：简单平 均法、 简单移动平均法及加权移动平均法。 
+
+1.  简单平均法 
+
+过去一定时期内数据序列的简单平均数就是对未来的预测数 ，在时序数据预测中用处不大。
+$$Y_{i}=\left(Y_{1}+Y_{2}+Y_{3}+\cdots+Y_{n}\right)/n$$
+```{python}
+Qt=QTdata.GDP;Qt
+Qt.mean()  #季节数据的平均
+```
+2. 简单移动平均法 
+
+简单移动平均法的各元素的权重都相等
+$$Y_{t}=\left(Y_{t-1}+Y_{t-2}+Y_{t-3}+\cdots+Y_{t-k}\right)/k$$
+
+Python的pandas包中的rolling函数可以用简单移动平均法来平滑时间序列数据。
+
+```{python}
+QtM=pd.DataFrame(Qt);QtM
+QtM['M2']=Qt.rolling(3).mean();QtM  #2阶移动平均
+QtM.plot()
+QtM['M4']=Qt.rolling(5).mean();QtM  #4阶移动平均
+QtM.plot()
+```
+
+3. 加权移动平均法
+
+加权移动平均法给固定跨越期限内的每个变量值以不相等的权重。 其原理是，历史各期
+产品需求的数据信息对预测未来期内的需求量的作用是不一样的。 除以k为周期的周期性
+变化外 ， 远离目标期的变量值的影响力相对较低 ， 故应给予较低的权重。
+$$Y_{t}=w_{1} Y_{t-1}+w_{2} Y_{t-2}+w_{3} Y_{t-3}+\cdots-w_{k}Y_{t-k}$$ 
+k为预测周期数，$w_1+w_2+\cdots+w_k=1$
+
+**移动平均法的优缺点**
+
+使用移动平均法进行预测 ， 能平滑掉需求的突然波动对预测结果的影响 ， 但移动平均法
+运用时也存在如下问题。
+
+1. 加大移动平均法的期数（即加大K值）会使平滑波动效果更好,但会使预测值对数据
+实际变动更不敏感； 
+2. 移动平均值并不能总是很好地反映出趋势，由于是平均值，故预测值总是停留在过去的
+水平上，而无法预计会导致将来更高还是更低的波动； 
+3. 移动平均法要有大量的过去数据的记录
+
+### 指数平滑预测法 
+指数平滑预测法 (Exponential Smoothing , ES) 是布朗 (R.G .Brown) 提出的 ， 简称
+指数平滑法 ， 布朗认为时间序列的态势具有稳定性或规则性 ， 所以时间序列可被合理
+地顺势推延；他认为 ，最近的过去态势 ， 在某种程度上会持续到未来 ， 所以将较大的
+权数放在最近的资料上。
+
+指数平滑法是生产预测中常用的一种方法 ， 也用于中短期经济发展趋势 预测。 在所有
+预测方法中 ， 指数平滑法是用得最多的一种。指数平滑法则茉具全期平均法和移动平均法
+所长 ， 不舍弃过去的数据 ， 但是仅给予逐渐减弱的影响程度 ， 即随着数据的远离 ， 
+赋予其逐渐收敛为零的权数。它通过计算指数平滑值 ， 配合一定的时间序列预测模型对
+现象的未来进行预测。 其原理是任一期的指数平滑值都是本期实际观察值与前一期指数
+平滑值的加权平均。 
+$$S_{t}=\alpha Y_{t}+(1-\alpha) S_{t-1}$$ 
+$S_t$为时间t的平滑值;$S_0$为初值，可取$Y_1$;$S_{t-1}$为$t-1$的实际值，$\alpha$为
+平滑常数 ， 其取值范围为[0,1]。$\alpha$的值通常可以多尝试几次以达到较佳效果。 
+
+```{python}
+QtE=pd.DataFrame(Qt);QtE
+QtE['E3']=Qt.ewm(alpha=0.3).mean(); QtE   #平滑系数=0.3
+#QtE.plot()
+QtE['E8']=Qt.ewm(alpha=0.8).mean(); QtE   #平滑系数=0.8
+QtE.plot();
+```
+
+# 股票数据统计分析 
+以苏宁易购（股票代码为002024）每个交易日的股票基本数据为例
+
+```{python}
+#导入数据
+stock=pd.read_excel('../data/DaPy_data.xlsx','Stock',index_col=0);
+stock.info() #显示数据结构
+stock.columns
+stock=stock.dropna() # 删除含缺失值的行
+stock.info()
+
+round(stock.describe(),3)
+```
+
+## 股票价格分析
+### 股票数据的整理
+```{python}
+stock[['Close','Volume']].head()  #收盘价与成交量数据
+stock['2015']['Close'].head()     #年度收盘价数据
+stock['2015-10']['Close']         #月度收盘价数据
+```
+### 价格年度与月度趋势
+```{python}
+stock['Close'].plot(); #年度趋势
+stock['2015']['Close'].plot(); #月度趋势
+```
+### 成交量分布情况
+```{python}
+stock['Volume'].hist()
+stock[['Close','Volume']].plot(secondary_y='Volume')
+stock['2015'][['Close','Volume']].plot(secondary_y='Volume')
+```
+
+### 收盘价的趋势预测
+```{python}
+SC=stock['2015']['Close']; SC  #2015年收盘价数据
+###移动平均线：
+SCM=pd.DataFrame(SC);SCM
+SCM['MA5']=SC.rolling(5).mean();
+SCM['MA20']=SC.rolling(20).mean();
+SCM['MA60']=SC.rolling(60).mean();
+SCM
+SCM.plot();
+SCM.plot(subplots=False,figsize=(15,10),grid=True);
+SCM.plot(subplots=True,figsize=(15,20),grid=True);
+```
+
+## 股票收益率分析 
+股票收益率指投资于股票所获得的收益总额与原始投资额的比率。股票得到投资者的青睬，
+是因为购买股票可带来收益。 股票的绝对收益就是股息，相对收益就是股票收益率。
+股票收益率＝收益额／原始投资额 
+
+### 收益率计算分析 
+```{python}
+def Return(Yt):   #计算收益率
+    Rt=Yt/Yt.shift(1)-1  #Yt.diff()/Yt.shift(1)
+    return(Rt)
+
+SA=stock['2015']['Adjusted']; SA[:10]  #2015年调整价数据
+SA_R=Return(SA);SA_R[:10]
+SA_R.plot().axhline(y=0)
+```
+
+### 年度收益率计算
+```{python}
+YR=pd.DataFrame({'Year':stock.index.year,'Adjusted':Return(stock['Adjusted'])});YR[:10]
+YRm=YR.groupby(['Year']).mean();YRm
+YRm.plot(kind='bar').axhline(y=0)
+```
+
+### 月度收益率计算
+```{python}
+YMR=pd.DataFrame({'Year':stock.index.year,'Month':stock.index.month,'Adjusted':Return(stock['Adjusted'])}); YMR[:10]
+YMRm=YMR.groupby(['Year','Month']).mean(); YMRm[:15]
+round(YMRm.unstack(),4)
+YMRm.plot().axhline(y=0)
+
+MRm=YMR['2005'].groupby(['Month']).mean(); MRm['Adjusted'].plot(kind='bar').axhline(y=0)
+```
