@@ -1,5 +1,5 @@
 ---
-title: "数据的统计分析"
+title: "数据的案例分析"
 author: "金林"
 date: "2020-01"
 output:
@@ -57,7 +57,6 @@ tableEqns: false
 autoEqnLabels: false
 ---
 
-
 ```{r setup, echo=F, purl=F}
 knitr::opts_knit$set(root.dir = getwd())
 knitr::opts_chunk$set(echo = T, results = 'hide')
@@ -72,21 +71,22 @@ graphics.off()
 Sys.setlocale("LC_ALL", "Chinese")
 ```
 
-# 数据的案例分析
-## 网上数据获取与保存
-### 网上数据的获取
+# 网上数据获取与保存
+## 网上数据的获取
 ```{python}
-import tushare as ts  
+！pip install tushare #安装Tushare包
+import tushare as ts  #{python}财经数据接口包 http://tushare.org
 import pandas as pd
 import matplotlib.pyplot as plt
+#获取沪深上市公司的基本情况
+?ts.get_stock_basics()
 #s_b = ts.get_stock_basics()
 #s_b.to_csv("..\data\s_b.csv")
 s_b = pd.read_csv("..\data\s_b.csv")
 s_b.info()
 s_b.head()
 ```
-
-### 在线股票数据分析
+## 在线股票数据分析
 ```{python}
 s_b.area.value_counts()
 s_b.area.value_counts().plot(kind='barh')
@@ -110,32 +110,28 @@ esp_ind_area['广东'].sort_values().tail(10) #广东省收益率最好的10个�
 #s_b.pivot_table('esp','industry','area',aggfunc=[np.mean])
 ```
 
-### 新股发行数据分析
+## 新股发行数据分析
+获取IPO发行和上市的时间列表，包括发行数呈、网上发行数呈、发行价格及中签率信
+息等。其中，retry_count：网络异常后的重试次数，默认为3；pause:重试时的停顿秒数，默认为0。
+
 ```{python,eval=F}
-n_s = ts.new_stocks()
-n_s = n_s.to_csv("..\data\n_s.csv")
+n_s=ts.new_stocks();
 n_s.info()
-n_s18 = n_s.loc[n_s.ipo_date>='2018',];n_s18  #2018年10月30日前发行的新股
+n_s18=n_s.loc[n_s.ipo_date>='2018',];n_s18  #2018年10月30日前发行的新股
 n_s18.sort_values(by='amount').iloc[-10:,:6]  #18年10月30日前发行量最大的10只新股
 n_s18.sort_values(by='ballot').iloc[-10:,[0,1,2,3,4,5,11]] #18年6月1日前中签率最高的10只新股
+import matplotlib.pyplot as plt
 plt.plot(n_s18.amount,n_s18.ballot,'o'); #发行量和中签率之间的散点图
 n_s18.amount.corr(n_s18.ballot)          #发行量和中签率之间的相关系数
+
 ```
 
-## 证券交易数据的分析
-###  股票行情数据分析
-####  历史行情数据分析
-get_hist_data()可获取个股历史交易数据，可以通过参数设置获取日k线、周k线、月k线、5分钟、30分钟等数据，不过只能获取近3年的日线数据，如果需要全部历史数据，可以使用接口get_h_data()。
-
-参数说明如下。
-
-- code：股票代码，即6位数字代码，或者指数代码（如hs300=沪深300指数）；
-- start：开始日期，格式YYYY-MM-DD；
-- end：结束日期，格式YYYY-MM-DD；
-- ktype：数据类型，D=日k线，W=周，M=月，5=5分钟，30=30分钟，默认为D；
-- retry_count：网络异常后的重试次数，默认为3；
-- pause：重试时停顿秒杀，默认为0。
-```{python}
+# 证券交易数据的分析
+##  历史行情数据分析
+交易类数据提供股票的交易行情数据，Tushare通过简单的接口调用可获取相应的
+DataFrame格式数据，主要包括以下类别：历史行情数据、复权历史数据、实时行
+情数据、历史分笔数据、实时报价数据、当日历史分笔数据、大盘指数列表大单交易数据。
+```{{python}}
 #hs300
 #h_s = ts.get_hist_data('399300')  #沪深300指数近三年的历史行情数据
 #ts.get_hist_data('399300',start='2018-01-01',end='2018-12-31') #指定时间区间
@@ -157,10 +153,9 @@ h_s[['open','close','high','low']].plot()
 h_s[['close','ma5','ma10','ma20']].plot()
 ```
 
-####  实时行情数据分析
-一次性获取当前交易所有股票的行情数据（如果是节假日，则为上一
-交易日，结果显示速度取决于网速）
-```{python,eval=F}
+##  实时行情数据分析
+一次性获取当前交易所有股票的行懦数据（如果是节假日，则为上一交易日，结果显示速度取决于网速）
+```{{python}}
 t_a = ts.get_today_all() 
 t_a.info()
 t_a.head()
@@ -170,17 +165,26 @@ up=t_a['changepercent'].sort_values().t_ail(10).index   #涨幅最大的10个行
 t_a.loc[up,['code','name','changepercent','trade','settlement','turnoverratio']]
 ```
 
-#### 大单交易数据分析
-```{python,eval=F}
-s_d = ts.get_sina_dd('002024', date='2019-05-30',vol=400) #默认400手 ####
+## 大单交易数据分析
+获取大单交易数据,默认大千等千400手,数据来源千新浪财经。\
+参数说明如下。\
+code: 股票代码 ， 即6位数字代码；\
+date: 日期 ， 格式为YYYY-MM-DD ; \
+vol: 手数 ， 默认为400手 ， 输入数值型参数；\
+retry_count : int, 默认为3, 如遇网络等问题则重复执行的次数；\
+pause : int, 默认为 0, 重复请求数据过程中暂停的秒数 ， 防止因请求间隔时间太短而出现的问题。
+```{{python}}
+s_d = ts.get_sina_dd('300274', date='2018-03-28',vol=400) #默认400手 ####
+print(s_d)
 s_d.info()
 s_d.head(10)
 da.tab(s_d['type'])
 s_d['type'].value_counts().plot(kind='pie');
 ```
 
-#### 公司盈利能力分析
-```{python,eval=F}
+## 公司盈利能力分析
+按年度、季度获取上市公司盈利能力数据。
+```{{python}}
 #p_d = ts.get_profit_data(2018,1);p_d   #获取2018年第1季度的盈利能力数据
 #p_d.to_csv("..\data\p_d.csv")
 p_d = pd.read_csv("..\data\p_d.csv")
@@ -191,8 +195,9 @@ round(p_d.describe(),2) #基本统计分析
 round(p_d.corr(),3)     #相关性分析
 ```
 
-#### 公司现金流量分析
-```{python,eval=F}
+## 公司现金流量分析
+按年度、季度获取上市公司现金流呈数据。
+```{{python}}
 #c_a = ts.get_cashflow_data(2018,1)  #获取2018年第1季度的现金流量数据
 #c_a.to_csv("..\data\c_a.csv")
 c_a = pd.read_csv("..\data\c_a.csv")
@@ -203,8 +208,8 @@ c_a.loc[st,].sort_values(by='c_ashflowratio').head(10)  #现金流量比率最�
 c_a.loc[st,].sort_values(by='cashflowratio').tail(10)  #现金流量比率最好的10家ST公司
 ```
 
-## 宏观经济数据的实证分析
-### 存款利率变动分析
+# 宏观经济数据的实证分析
+## 存款利率变动分析
 ```{python}
 #d_r = ts.get_deposit_rate()
 #d_r.to_csv("..\data\d_r.csv")
@@ -222,7 +227,7 @@ dr3.columns=['活期存款(不定期)','整存整取(一年)'];dr3
 dr3.plot();
 dr3.plot(secondary_y='整存整取(一年)');
 ```
-### 国内生产总值GDP分析
+## 国内生产总值GDP分析
 ```{python}
 #g_y = ts.get_gdp_year()  ## 国内生产总值(年度)
 #g_y.to_csv("..\data\g_y.csv")
@@ -244,8 +249,8 @@ g_y2.plot(kind='bar')
 g_y2.plot(kind='line')
 ```
 
-### 工业品出厂价格指数分析
-```{python,eval=F}
+## 工业品出厂价格指数分析
+```{python}
 #g_p = ts.get_ppi()
 #g_p.to_csv("..\data\g_p.csv")
 g_p = pd.read_csv("..\data\g_p.csv")
@@ -263,26 +268,27 @@ g_p2 = g_p[['month','cg','food','clothing','roeu','dcg']].dropna();g_p2
 g_p2.plot(grid=True)
 ```
 
-### 电影票房数据的实时分析
-```{python,eval=F}
-#实时票房
-#获取实时电影票房数据，30分钟更新一次票房数据，可随时调用。
+# 电影票房数据的实时分析
+## 实时票房数据分析
+获取实时电影票房数据，30分钟更新一次票房数据，可随时调用。
+```{python}
 r_b = ts.realtime_boxoffice()
 r_b.info()
 r_b
-
 plt.barh(r_b.MovieName,r_b.BoxOffice.astype(float));
 plt.pie(r_b.boxPer,labels=r_b.MovieName);
-
-#每日票房
+```
+## 每日票房数据分析
+获取单日电影票房数据，默认为上一日的电影票房数据，可输入参数获取指定日期的票房数据，其中，date:日期 (YYYY-MM-DD)，默认为上一日。
+```{python}
 d_b = ts.day_boxoffice() #取上一日的数据
 d_b
-
-#影院日度票房
-#获取全国影院单日票房排行数据，默认为上一日，可输入日期参数获取指定日期的数据。
+```
+## 影院日度票房分析
+获取全国影院单日票房排行数据，默认为上一日，可输入日期参数获取指定日期的数据。
+```{python}
 d_c=ts.day_cinema() #取上一日全国影院票房排行数据
 d_c.info()
-
 d_c[:10]
 plt.barh(d_c.CinemaName[:10],d_c.Attendance.astype(float)[:10]);
 ```
