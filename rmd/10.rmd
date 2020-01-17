@@ -1,0 +1,266 @@
+---
+title: "数据的模型分析"
+author: "金林"
+date: "2020-01"
+output:
+  bookdown::html_document2:
+    fig_caption: true
+    highlight: haddock
+    keep_md: true
+    md_extensions: +east_asian_line_breaks
+    number_sections: true
+    pandoc_args:
+    - --filter
+    - pandoc-crossref
+    - -M
+    - eqnPrefix=
+    seq_numbering: false
+    toc: true
+  beamer_presentation:
+    keep_tex: true
+    latex_engine: xelatex
+    toc: true
+    pandoc_args:
+    - --listing
+    - --filter
+    - pandoc-crossref
+    slide_level: 3
+    template: ./style/beamer-template.tex
+  bookdown::pdf_document2:
+    keep_tex: true
+    latex_engine: xelatex
+    md_extensions: +east_asian_line_breaks
+    pandoc_args:
+    - --listing
+    - --filter
+    - pandoc-crossref
+    toc: false
+  bookdown::word_document2:
+    fig_caption: true
+    md_extensions: +east_asian_line_breaks
+    pandoc_args:
+    - --filter
+    - pandoc-crossref
+    reference_docx: ./style/word-styles-02.docx
+  ioslides_presentation:
+    highlight: haddock
+    slide_level: 3
+css: ./style/markdown.css
+csl: ./style/chinese-gb7714-2005-numeric.csl
+bibliography: Bibfile.bib
+eqnPrefixTemplate: ($$i$$)
+institute: "中南财经政法大学统计与数学学院"
+link-citations: true
+linkReferences: true
+chapters: true
+tableEqns: false
+autoEqnLabels: false
+---
+# 数据的案例分析
+## 网上数据获取与保存
+### 网上数据的获取
+```python
+import tushare as ts  #python财经数据接口包 http://tushare.org
+import pandas as pd
+import matplotlib.pyplot as plt
+#获取沪深上市公司的基本情况
+?ts.get_stock_basics()
+#s_b = ts.get_stock_basics()
+#s_b.to_csv("..\data\s_b.csv")
+s_b = pd.read_csv("..\data\s_b.csv")
+s_b.info()
+s_b.head()
+```
+### 在线股票数据分析
+```python
+s_b.area.value_counts()
+s_b.area.value_counts().plot(kind='barh')
+
+s_b.industry.value_counts()
+s_b.industry.value_counts()[:20].plot(kind='barh'); #前20个行业分布
+
+s_b.groupby(['industry'])[['pe','pb','esp','gpr','npr']].mean()[:10]
+
+esp_ind = s_b.groupby(['industry'])['esp'].mean();esp_ind #按行业(industry)计算平均收益率(esp)
+esp_ind.sort_values().head(10) #收益率最差的10个行业
+esp_ind.sort_values().tail(10) #收益率最好的10个行业
+
+esp_ind.sort_values().head(10).plot(kind='bar')
+esp_ind.sort_values().tail(10).plot(kind='bar')
+
+#按地区(area)和行业(industry)计算平均收益率(esp)  #,gpr(毛利率(%)),npr(净利润率(%)),pe(市盈率)
+esp_ind_area = s_b.groupby(['area','industry'])['esp'].mean(); esp_ind_area
+esp_ind_area['广东'].sort_values().head(10) #广东省收益率最差的10个行业
+esp_ind_area['广东'].sort_values().tail(10) #广东省收益率最好的10个行业
+#s_b.pivot_table('esp','industry','area',aggfunc=[np.mean])
+```
+
+### 新股发行数据分析
+```python
+n_s = ts.new_stocks()
+n_s = n_s.to_csv("..\data\n_s.csv")
+n_s.info()
+n_s18 = n_s.loc[n_s.ipo_date>='2018',];n_s18  #2018年10月30日前发行的新股
+n_s18.sort_values(by='amount').iloc[-10:,:6]  #18年10月30日前发行量最大的10只新股
+n_s18.sort_values(by='ballot').iloc[-10:,[0,1,2,3,4,5,11]] #18年6月1日前中签率最高的10只新股
+plt.plot(n_s18.amount,n_s18.ballot,'o'); #发行量和中签率之间的散点图
+n_s18.amount.corr(n_s18.ballot)          #发行量和中签率之间的相关系数
+```
+
+## 证券交易数据的分析
+###  股票行情数据分析
+####  历史行情数据分析
+```python
+#hs300
+#h_s = ts.get_hist_data('399300')  #沪深300指数近三年的历史行情数据
+#ts.get_hist_data('399300',start='2018-01-01',end='2018-12-31') #指定时间区间
+#h_s.to_csv("..\data\h_s.csv")
+h_s = pd.read_csv("..\data\h_s.csv")
+h_s.info()
+h_s.columns
+h_s.head()
+h_s.sort_index(inplace=True); #按时间排序
+h_s.head()
+
+h_s['close'].plot()
+h_s['volume'].plot()
+h_s['price_change'].plot().axhline(y=0,color='red')
+h_s['p_change'].plot().axhline(y=0,color='red')
+
+h_s[['open','close']].plot()
+h_s[['open','close','high','low']].plot()
+h_s[['close','ma5','ma10','ma20']].plot()
+```
+
+####  实时行情数据分析
+```python
+'''
+t_a = ts.get_today_all() 
+t_a.info()
+t_a.head()
+down=t_a['changepercent'].sort_values().head(10).index #跌幅最大的10个行业
+t_a.loc[down,['code','name','changepercent','trade','settlement','turnoverratio']]
+up=t_a['changepercent'].sort_values().t_ail(10).index   #涨幅最大的10个行业
+t_a.loc[up,['code','name','changepercent','trade','settlement','turnoverratio']]
+'''
+```
+
+#### 大单交易数据分析
+```python
+'''s_d = ts.get_sina_dd('002024', date='2019-05-30',vol=400) #默认400手 ####
+s_d.info()
+s_d.head(10)
+da.tab(s_d['type'])
+s_d['type'].value_counts().plot(kind='pie');
+'''
+```
+
+#### 公司盈利能力分析
+```python
+#p_d = ts.get_profit_data(2018,1);p_d   #获取2018年第1季度的盈利能力数据
+#p_d.to_csv("..\data\p_d.csv")
+p_d = pd.read_csv("..\data\p_d.csv")
+p_d.info()
+p_d.columns=['代码','名称','净收益率','净利润率','毛利润率','净利润额','每股收益','营业收入','主营收入']
+round(p_d.head(10),3)
+round(p_d.describe(),2) #基本统计分析
+round(p_d.corr(),3)     #相关性分析
+```
+
+#### 公司现金流量分析
+```python
+#c_a = ts.get_cashflow_data(2018,1)  #获取2018年第1季度的现金流量数据
+#c_a.to_csv("..\data\c_a.csv")
+c_a = pd.read_csv("..\data\c_a.csv")
+c_a.info()
+c_a.head()
+st=c_a['name'].str[:3]=='*ST'  #选取ST公司
+c_a.loc[st,].sort_values(by='c_ashflowratio').head(10)  #现金流量比率最差的10家ST公司
+c_a.loc[st,].sort_values(by='cashflowratio').tail(10)  #现金流量比率最好的10家ST公司
+```
+
+## 宏观经济数据的实证分析
+### 存款利率变动分析
+```python
+#d_r = ts.get_deposit_rate()
+#d_r.to_csv("..\data\d_r.csv")
+d_r = pd.read_csv("..\data\d_r.csv")
+d_r.info()
+d_r
+d_r.deposit_type.value_counts()
+
+dr1 = d_r[d_r.deposit_type=='活期存款(不定期)'].sort_values(by='date');
+dr1.index=dr1.date.str[:7];dr1
+dr2 = d_r[d_r.deposit_type=='定期存款整存整取(一年)'].sort_values(by='date');
+dr2.index=dr2.date.str[:7];dr2
+dr3 = pd.concat([dr1.rate.astype(float),dr2.rate.astype(float)],axis=1);
+dr3.columns=['活期存款(不定期)','整存整取(一年)'];dr3
+dr3.plot();
+dr3.plot(secondary_y='整存整取(一年)');
+```
+### 国内生产总值GDP分析
+```python
+#g_y = ts.get_gdp_year()  ## 国内生产总值(年度)
+#g_y.to_csv("..\data\g_y.csv")
+g_y = pd.read_csv("..\data\g_y.csv")
+g_y.info()
+g_y.head()
+#g_y.index=g_y.year
+#g_y.drop(['year'],axis=1,inplace=True)
+#g_y.sort_index(inplace=True) #
+g_y.sort_values(by='year',inplace=True)
+g_y.head()
+plt.plot(g_y.year,g_y.gdp)
+
+g_y1=g_y[g_y.year>=1990];g_y1
+plt.plot(g_y1.year,g_y1.gdp)
+g_y2=g_y1[['pi','si','ti']];
+g_y2.index=g_y1.year; g_y2
+g_y2.plot(kind='bar')
+g_y2.plot(kind='line')
+```
+
+### 工业品出厂价格指数分析
+```python
+#g_p = ts.get_ppi()
+#g_p.to_csv("..\data\g_p.csv")
+g_p = pd.read_csv("..\data\g_p.csv")
+g_p.info()
+g_p
+g_p.sort_values(by='month',inplace=True); g_p
+g_p.index = g_p.month;g_p
+g_p.plot(g_p.month);
+#工业品价格指数
+g_p1 = g_p[['month','ppiip','ppi','qm','rmi','pi']].dropna()
+g_p1
+g_p1.plot();
+#生活价格指数
+g_p2 = g_p[['month','cg','food','clothing','roeu','dcg']].dropna();g_p2
+g_p2.plot(grid=True)
+```
+
+### 电影票房数据的实时分析
+```python
+#实时票房
+#获取实时电影票房数据，30分钟更新一次票房数据，可随时调用。
+'''
+r_b = ts.realtime_boxoffice()
+r_b.info()
+r_b
+
+plt.barh(r_b.MovieName,r_b.BoxOffice.astype(float));
+plt.pie(r_b.boxPer,labels=r_b.MovieName);
+
+#每日票房
+d_b = ts.day_boxoffice() #取上一日的数据
+d_b
+
+#影院日度票房
+#获取全国影院单日票房排行数据，默认为上一日，可输入日期参数获取指定日期的数据。
+d_c=ts.day_cinema() #取上一日全国影院票房排行数据
+d_c.info()
+
+d_c[:10]
+plt.barh(d_c.CinemaName[:10],d_c.Attendance.astype(float)[:10]);
+'''
+```
