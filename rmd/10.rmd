@@ -74,9 +74,9 @@ Sys.setlocale("LC_ALL", "Chinese")
 # 网上数据获取与保存
 ## 网上数据的获取
 
-```{python}
-#!pip install tushare #安装Tushare包
-import tushare as ts  #{python}财经数据接口包 http://tushare.org
+```python
+!pip install tushare #安装Tushare包
+import tushare as ts  #python财经数据接口包 http://tushare.org
 import pandas as pd
 import matplotlib.pyplot as plt
 #获取沪深上市公司的基本情况
@@ -88,7 +88,7 @@ s_b.info()
 s_b.head()
 ```
 ## 在线股票数据分析
-```{python}
+```python
 s_b.area.value_counts()
 s_b.area.value_counts().plot(kind='barh')
 
@@ -142,7 +142,7 @@ end:结束日期，格式YYYY-MM-DD; \
 ktype:数据类型，D=日K线，W=周，M=月，5=5分钟，15=15分钟，30=30分钟，60=60分钟，默认为D;\
 retry_count:网络异常后的重试次数，默认为3; \
 pause:重试时停顿秒数，默认为0。
-```{{python}}
+```python
 #hs300
 #h_s = ts.get_hist_data('399300')  #沪深300指数近三年的历史行情数据
 #ts.get_hist_data('399300',start='2018-01-01',end='2018-12-31') #指定时间区间
@@ -166,7 +166,7 @@ h_s[['close','ma5','ma10','ma20']].plot()
 
 ##  实时行情数据分析
 一次性获取当前交易所有股票的行懦数据（如果是节假日，则为上一交易日，结果显示速度取决于网速）
-```{{python}}
+```python
 t_a = ts.get_today_all() 
 t_a.info()
 t_a.head()
@@ -184,7 +184,7 @@ date: 日期 ， 格式为YYYY-MM-DD ; \
 vol: 手数 ， 默认为400手 ， 输入数值型参数；\
 retry_count : int, 默认为3, 如遇网络等问题则重复执行的次数；\
 pause : int, 默认为 0, 重复请求数据过程中暂停的秒数 ， 防止因请求间隔时间太短而出现的问题。
-```{{python}}
+```python
 s_d = ts.get_sina_dd('300274', date='2018-03-28',vol=400) #默认400手 ####
 print(s_d)
 s_d.info()
@@ -195,7 +195,7 @@ s_d['type'].value_counts().plot(kind='pie');
 
 ## 公司盈利能力分析
 按年度、季度获取上市公司盈利能力数据。
-```{{python}}
+```python
 #p_d = ts.get_profit_data(2018,1);p_d   #获取2018年第1季度的盈利能力数据
 #p_d.to_csv("..\data\p_d.csv")
 p_d = pd.read_csv("..\data\p_d.csv")
@@ -208,7 +208,7 @@ round(p_d.corr(),3)     #相关性分析
 
 ## 公司现金流量分析
 按年度、季度获取上市公司现金流呈数据。
-```{{python}}
+```python
 #c_a = ts.get_cashflow_data(2018,1)  #获取2018年第1季度的现金流量数据
 #c_a.to_csv("..\data\c_a.csv")
 c_a = pd.read_csv("..\data\c_a.csv")
@@ -221,7 +221,7 @@ c_a.loc[st,].sort_values(by='cashflowratio').tail(10)  #现金流量比率最好
 
 # 宏观经济数据的实证分析
 ## 存款利率变动分析
-```{python}
+```python
 #d_r = ts.get_deposit_rate()
 #d_r.to_csv("..\data\d_r.csv")
 d_r = pd.read_csv("..\data\d_r.csv")
@@ -239,7 +239,7 @@ dr3.plot();
 dr3.plot(secondary_y='整存整取(一年)');
 ```
 ## 国内生产总值GDP分析
-```{python}
+```python
 #g_y = ts.get_gdp_year()  ## 国内生产总值(年度)
 #g_y.to_csv("..\data\g_y.csv")
 g_y = pd.read_csv("..\data\g_y.csv")
@@ -261,7 +261,7 @@ g_y2.plot(kind='line')
 ```
 
 ## 工业品出厂价格指数分析
-```{python}
+```python
 #g_p = ts.get_ppi()
 #g_p.to_csv("..\data\g_p.csv")
 g_p = pd.read_csv("..\data\g_p.csv")
@@ -282,7 +282,7 @@ g_p2.plot(grid=True)
 # 电影票房数据的实时分析
 ## 实时票房数据分析
 获取实时电影票房数据，30分钟更新一次票房数据，可随时调用。
-```{python}
+```python
 r_b = ts.realtime_boxoffice()
 r_b.info()
 r_b
@@ -291,13 +291,13 @@ plt.pie(r_b.boxPer,labels=r_b.MovieName);
 ```
 ## 每日票房数据分析
 获取单日电影票房数据，默认为上一日的电影票房数据，可输入参数获取指定日期的票房数据，其中，date:日期 (YYYY-MM-DD)，默认为上一日。
-```{python}
+```python
 d_b = ts.day_boxoffice() #取上一日的数据
 d_b
 ```
 ## 影院日度票房分析
 获取全国影院单日票房排行数据，默认为上一日，可输入日期参数获取指定日期的数据。
-```{python}
+```python
 d_c=ts.day_cinema() #取上一日全国影院票房排行数据
 d_c.info()
 d_c[:10]
