@@ -1,5 +1,5 @@
 ---
-title: "数据的模型分析"
+title: "数据的统计分析"
 author: "金林"
 date: "2020-01"
 output:
@@ -56,22 +56,38 @@ chapters: true
 tableEqns: false
 autoEqnLabels: false
 ---
+
+
+```{r setup, echo=F, purl=F}
+knitr::opts_knit$set(root.dir = getwd())
+knitr::opts_chunk$set(echo = T, results = 'hide')
+knitr::opts_chunk$set(warning = FALSE, message=FALSE)
+```
+
+```{r prepare, echo=F, purl=F}
+rm(list=ls())
+options(digits=4)
+options(scipen=100)
+graphics.off()
+Sys.setlocale("LC_ALL", "Chinese")
+```
+
 # 数据的案例分析
 ## 网上数据获取与保存
 ### 网上数据的获取
-```{python,eval=F}
+```{python}
 import tushare as ts  
 import pandas as pd
 import matplotlib.pyplot as plt
-?ts.get_stock_basics()
 #s_b = ts.get_stock_basics()
 #s_b.to_csv("..\data\s_b.csv")
 s_b = pd.read_csv("..\data\s_b.csv")
 s_b.info()
 s_b.head()
 ```
+
 ### 在线股票数据分析
-```{python,eval=F}
+```{python}
 s_b.area.value_counts()
 s_b.area.value_counts().plot(kind='barh')
 
@@ -111,14 +127,15 @@ n_s18.amount.corr(n_s18.ballot)          #发行量和中签率之间的相关�
 ####  历史行情数据分析
 get_hist_data()可获取个股历史交易数据，可以通过参数设置获取日k线、周k线、月k线、5分钟、30分钟等数据，不过只能获取近3年的日线数据，如果需要全部历史数据，可以使用接口get_h_data()。
 
-参数说明如下:
+参数说明如下。
+
 - code：股票代码，即6位数字代码，或者指数代码（如hs300=沪深300指数）；
 - start：开始日期，格式YYYY-MM-DD；
 - end：结束日期，格式YYYY-MM-DD；
 - ktype：数据类型，D=日k线，W=周，M=月，5=5分钟，30=30分钟，默认为D；
 - retry_count：网络异常后的重试次数，默认为3；
 - pause：重试时停顿秒杀，默认为0。
-```{python,eval=F}
+```{python}
 #hs300
 #h_s = ts.get_hist_data('399300')  #沪深300指数近三年的历史行情数据
 #ts.get_hist_data('399300',start='2018-01-01',end='2018-12-31') #指定时间区间
@@ -144,7 +161,6 @@ h_s[['close','ma5','ma10','ma20']].plot()
 一次性获取当前交易所有股票的行情数据（如果是节假日，则为上一
 交易日，结果显示速度取决于网速）
 ```{python,eval=F}
-'''
 t_a = ts.get_today_all() 
 t_a.info()
 t_a.head()
@@ -152,17 +168,15 @@ down=t_a['changepercent'].sort_values().head(10).index #跌幅最大的10个行�
 t_a.loc[down,['code','name','changepercent','trade','settlement','turnoverratio']]
 up=t_a['changepercent'].sort_values().t_ail(10).index   #涨幅最大的10个行业
 t_a.loc[up,['code','name','changepercent','trade','settlement','turnoverratio']]
-'''
 ```
 
 #### 大单交易数据分析
 ```{python,eval=F}
-'''s_d = ts.get_sina_dd('002024', date='2019-05-30',vol=400) #默认400手 ####
+s_d = ts.get_sina_dd('002024', date='2019-05-30',vol=400) #默认400手 ####
 s_d.info()
 s_d.head(10)
 da.tab(s_d['type'])
 s_d['type'].value_counts().plot(kind='pie');
-'''
 ```
 
 #### 公司盈利能力分析
@@ -191,7 +205,7 @@ c_a.loc[st,].sort_values(by='cashflowratio').tail(10)  #现金流量比率最好
 
 ## 宏观经济数据的实证分析
 ### 存款利率变动分析
-```{python,eval=F}
+```{python}
 #d_r = ts.get_deposit_rate()
 #d_r.to_csv("..\data\d_r.csv")
 d_r = pd.read_csv("..\data\d_r.csv")
@@ -209,7 +223,7 @@ dr3.plot();
 dr3.plot(secondary_y='整存整取(一年)');
 ```
 ### 国内生产总值GDP分析
-```{python,eval=F}
+```{python}
 #g_y = ts.get_gdp_year()  ## 国内生产总值(年度)
 #g_y.to_csv("..\data\g_y.csv")
 g_y = pd.read_csv("..\data\g_y.csv")
@@ -253,7 +267,6 @@ g_p2.plot(grid=True)
 ```{python,eval=F}
 #实时票房
 #获取实时电影票房数据，30分钟更新一次票房数据，可随时调用。
-'''
 r_b = ts.realtime_boxoffice()
 r_b.info()
 r_b
@@ -272,5 +285,4 @@ d_c.info()
 
 d_c[:10]
 plt.barh(d_c.CinemaName[:10],d_c.Attendance.astype(float)[:10]);
-'''
 ```
