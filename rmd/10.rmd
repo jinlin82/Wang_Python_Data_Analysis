@@ -59,11 +59,10 @@ autoEqnLabels: false
 # 数据的案例分析
 ## 网上数据获取与保存
 ### 网上数据的获取
-```python
-import tushare as ts  #python财经数据接口包 http://tushare.org
+```{python,eval=F}
+import tushare as ts  
 import pandas as pd
 import matplotlib.pyplot as plt
-#获取沪深上市公司的基本情况
 ?ts.get_stock_basics()
 #s_b = ts.get_stock_basics()
 #s_b.to_csv("..\data\s_b.csv")
@@ -72,7 +71,7 @@ s_b.info()
 s_b.head()
 ```
 ### 在线股票数据分析
-```python
+```{python,eval=F}
 s_b.area.value_counts()
 s_b.area.value_counts().plot(kind='barh')
 
@@ -96,7 +95,7 @@ esp_ind_area['广东'].sort_values().tail(10) #广东省收益率最好的10个�
 ```
 
 ### 新股发行数据分析
-```python
+```{python,eval=F}
 n_s = ts.new_stocks()
 n_s = n_s.to_csv("..\data\n_s.csv")
 n_s.info()
@@ -110,7 +109,7 @@ n_s18.amount.corr(n_s18.ballot)          #发行量和中签率之间的相关�
 ## 证券交易数据的分析
 ###  股票行情数据分析
 ####  历史行情数据分析
-```python
+```{python,eval=F}
 #hs300
 #h_s = ts.get_hist_data('399300')  #沪深300指数近三年的历史行情数据
 #ts.get_hist_data('399300',start='2018-01-01',end='2018-12-31') #指定时间区间
@@ -133,7 +132,7 @@ h_s[['close','ma5','ma10','ma20']].plot()
 ```
 
 ####  实时行情数据分析
-```python
+```{python,eval=F}
 '''
 t_a = ts.get_today_all() 
 t_a.info()
@@ -146,7 +145,7 @@ t_a.loc[up,['code','name','changepercent','trade','settlement','turnoverratio']]
 ```
 
 #### 大单交易数据分析
-```python
+```{python,eval=F}
 '''s_d = ts.get_sina_dd('002024', date='2019-05-30',vol=400) #默认400手 ####
 s_d.info()
 s_d.head(10)
@@ -156,7 +155,7 @@ s_d['type'].value_counts().plot(kind='pie');
 ```
 
 #### 公司盈利能力分析
-```python
+```{python,eval=F}
 #p_d = ts.get_profit_data(2018,1);p_d   #获取2018年第1季度的盈利能力数据
 #p_d.to_csv("..\data\p_d.csv")
 p_d = pd.read_csv("..\data\p_d.csv")
@@ -168,7 +167,7 @@ round(p_d.corr(),3)     #相关性分析
 ```
 
 #### 公司现金流量分析
-```python
+```{python,eval=F}
 #c_a = ts.get_cashflow_data(2018,1)  #获取2018年第1季度的现金流量数据
 #c_a.to_csv("..\data\c_a.csv")
 c_a = pd.read_csv("..\data\c_a.csv")
@@ -181,7 +180,7 @@ c_a.loc[st,].sort_values(by='cashflowratio').tail(10)  #现金流量比率最好
 
 ## 宏观经济数据的实证分析
 ### 存款利率变动分析
-```python
+```{python,eval=F}
 #d_r = ts.get_deposit_rate()
 #d_r.to_csv("..\data\d_r.csv")
 d_r = pd.read_csv("..\data\d_r.csv")
@@ -199,7 +198,7 @@ dr3.plot();
 dr3.plot(secondary_y='整存整取(一年)');
 ```
 ### 国内生产总值GDP分析
-```python
+```{python,eval=F}
 #g_y = ts.get_gdp_year()  ## 国内生产总值(年度)
 #g_y.to_csv("..\data\g_y.csv")
 g_y = pd.read_csv("..\data\g_y.csv")
@@ -221,7 +220,7 @@ g_y2.plot(kind='line')
 ```
 
 ### 工业品出厂价格指数分析
-```python
+```{python,eval=F}
 #g_p = ts.get_ppi()
 #g_p.to_csv("..\data\g_p.csv")
 g_p = pd.read_csv("..\data\g_p.csv")
@@ -240,7 +239,7 @@ g_p2.plot(grid=True)
 ```
 
 ### 电影票房数据的实时分析
-```python
+```{python,eval=F}
 #实时票房
 #获取实时电影票房数据，30分钟更新一次票房数据，可随时调用。
 '''
