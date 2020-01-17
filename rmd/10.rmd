@@ -73,8 +73,9 @@ Sys.setlocale("LC_ALL", "Chinese")
 
 # 网上数据获取与保存
 ## 网上数据的获取
+
 ```{python}
-！pip install tushare #安装Tushare包
+#!pip install tushare #安装Tushare包
 import tushare as ts  #{python}财经数据接口包 http://tushare.org
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -127,10 +128,20 @@ n_s18.amount.corr(n_s18.ballot)          #发行量和中签率之间的相关�
 ```
 
 # 证券交易数据的分析
-##  历史行情数据分析
 交易类数据提供股票的交易行情数据，Tushare通过简单的接口调用可获取相应的
 DataFrame格式数据，主要包括以下类别：历史行情数据、复权历史数据、实时行
 情数据、历史分笔数据、实时报价数据、当日历史分笔数据、大盘指数列表大单交易数据。
+##  历史行情数据分析
+获取个股历史交易数据(包括均线数据),可以通过参数设置获取日K线、周K线、月K线，以及
+5分钟、15分钟、30分钟和60分钟K线数据。本接口只能获取近3年的日线数据，适合搭配均线数据进行选股和分析，如果需要全部历史数据，请调用下一个接口get_h_data()。\
+参数说明如下:\
+code:股票代码,即6位数字代码,或者指数代码(sh=上证指数,sz=深圳成指,hs300=沪深300
+指数,sz50=上证50指数,zxb=中小板,cyb=创业板）；\
+start:开始日期，格式YYYY-MM-DD; \
+end:结束日期，格式YYYY-MM-DD; \
+ktype:数据类型，D=日K线，W=周，M=月，5=5分钟，15=15分钟，30=30分钟，60=60分钟，默认为D;\
+retry_count:网络异常后的重试次数，默认为3; \
+pause:重试时停顿秒数，默认为0。
 ```{{python}}
 #hs300
 #h_s = ts.get_hist_data('399300')  #沪深300指数近三年的历史行情数据
