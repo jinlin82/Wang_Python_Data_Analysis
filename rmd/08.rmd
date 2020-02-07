@@ -62,6 +62,7 @@ autoEqnLabels: false
 knitr::opts_knit$set(root.dir = getwd())
 knitr::opts_chunk$set(echo = T, results = 'hide')
 knitr::opts_chunk$set(warning = FALSE, message=FALSE)
+knitr::opts_chunk$set(fig.align = 'center')
 ```
 
 ```{r prepare, echo=F, purl=F}
@@ -84,7 +85,6 @@ import pandas as pd
 QTdata=pd.read_excel('../data/DaPy_data.xlsx','QTdata',index_col=0);QTdata.head(8) #获取数据
 import matplotlib.pyplot as plt
 QTdata.plot() #季度时序图
-
 ```
 
 
@@ -112,10 +112,12 @@ YGDP.plot();  #年度时序图
 1. 定基增长量
 报告期指标与某一固定期（基期水平）指标之差 ，也称累计增长量（简称定基数）。 
 $$定基数=a_i-a_1$$
+
 ```{python}
 YGDPds=pd.DataFrame(YGDP);YGDPds  #构建年度动态序列框
 YGDPds['定基数']=YGDP-YGDP[:1].values;YGDPds
 ```
+
 2. 环比增长量
 报告期的指标与前一期指标之差，也称逐期增长量（简称环比数） 
    $$环比数=a_i-a_{i-1}$$
@@ -356,16 +358,20 @@ round(stock.describe(),3)
 
 ## 股票价格分析
 ### 股票数据的整理
+
 ```{python}
 stock[['Close','Volume']].head()  #收盘价与成交量数据
 stock['2015']['Close'].head()     #年度收盘价数据
 stock['2015-10']['Close']         #月度收盘价数据
 ```
+
 ### 价格年度与月度趋势
+
 ```{python}
 stock['Close'].plot(); #年度趋势
 stock['2015']['Close'].plot(); #月度趋势
 ```
+
 ### 成交量分布情况
 ```{python}
 stock['Volume'].hist()
@@ -384,7 +390,7 @@ SCM['MA60']=SC.rolling(60).mean();
 SCM
 SCM.plot();
 SCM.plot(subplots=False,figsize=(15,10),grid=True);
-SCM.plot(subplots=True,figsize=(15,20),grid=True);
+SCM.plot(subplots=True,figsize=(7.5,10),grid=True);
 ```
 
 ## 股票收益率分析 
