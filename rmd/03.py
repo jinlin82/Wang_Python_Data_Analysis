@@ -141,7 +141,6 @@ BSdata.iloc[:,2:4]
 
 BSdata.loc[3]
 BSdata.loc[3:5]
-
 BSdata.loc[:3,['身高','体重']]
 BSdata.iloc[:3,:5]
 
@@ -196,26 +195,3 @@ xbar1(x)
 xbar2(x)
 
 np.mean(x)
-
-def SS1(x):
-    n=len(x)
-    ss=sum(x**2)-sum(x)**2/n
-    return(ss)
-
-SS1(S1)
-
-def SS2(x):
-    n=len(x)
-    xm=sum(x)/n
-    ss=sum(x**2)-sum(x)**2/n
-    return[x**2,n,xm,ss]
-
-SS2(S1)
-
-SS2(S1)[0]
-SS2(S1)[1]
-SS2(S1)[2]
-SS2(S1)[3]
-
-type(SS2(S1))
-type(SS2(S1)[3])
